@@ -1,0 +1,25 @@
+.wrapper {
+  margin: 2rem 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  input {
+    font-size: 1.3rem;
+    width: 20rem;
+    border: 0px solid;
+    border-bottom: 1px solid;
+    padding-bottom: 0.5rem;
+    background-color: rgb(241, 244, 249);
+  }
+
+  button {
+    font-size: 1.3rem;
+    margin: 0 0.5rem;
+    padding: 0.5rem 2rem;
+    background-color: rgba(42, 132, 235, 0.808);
+    border-radius: 5px;
+    border-style: none;
+    color: white;
+  }
+}
