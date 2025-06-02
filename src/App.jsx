@@ -5,21 +5,33 @@ import styles from "./components/App.module.scss";
 import Task from "./components/Task";
 
 function App() {
-  const [selectedTab, setSelectedTab] = useState();
+  const [selectedTab, setSelectedTab] = useState("all");
   const [userInput, setUserInput] = useState("");
   const [userTasks, setUserTasks] = useState([]);
   let [count, setCount] = useState(0);
 
   function handleuserTasks() {
     setUserTasks(() => {
-      return [...userTasks, { id: count, name: userInput }];
+      return [
+        ...userTasks,
+        { id: count, name: userInput, isEditing: false, completed: false },
+      ];
     });
     setUserInput("");
     setCount((prevCount) => prevCount + 1);
+    console.log(userTasks);
   }
 
   function handleSelect(selectedButton) {
     setSelectedTab(() => selectedButton);
+  }
+
+  function checked(id) {
+    setUserTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        task.id === id ? { ...task, checked: !task.checked } : task;
+      })
+    );
   }
 
   console.log(userTasks);
@@ -55,6 +67,7 @@ function App() {
           Сделано
         </Tabs>
       </div>
+      <Task userTasks={userTasks} />
     </>
   );
 }

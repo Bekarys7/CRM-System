@@ -1,7 +1,7 @@
 .control {
   margin: 1rem auto;
   display: flex;
-  width: 26rem;
+  width: 30rem;
   height: 3rem;
   background-color: white;
   border-radius: 5px;
@@ -24,5 +24,8 @@
   }
   .deleteButton {
     background-color: rgba(253, 103, 86);
+  }
+  label .underline {
+    text-decoration: line-through;
   }
 }
