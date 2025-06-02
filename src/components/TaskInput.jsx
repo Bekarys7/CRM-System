@@ -1,20 +1,14 @@
 import styles from "../components/TaskInput.module.scss";
-// import { useState } from "react";
 
-export default function TaskInput({ userInput, onChange, onChange2 }) {
-  // console.log(userTasks);
-
+export default function TaskInput({ addTodo, onChange, newTask }) {
   return (
     <div className={styles.wrapper}>
       <input
-        value={userInput}
-        type="text"
-        required
-        placeholder="Task to be done"
-        minLength={2}
-        onChange={onChange2}
+        onChange={onChange}
+        placeholder="Tasks To Be Done"
+        value={newTask}
       />
-      <button onClick={onChange}>Add</button>
+      <button onClick={addTodo}>Add</button>
     </div>
   );
 }
