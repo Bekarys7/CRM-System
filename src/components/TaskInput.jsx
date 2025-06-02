@@ -1,23 +1,31 @@
 import styles from "../components/TaskInput.module.scss";
-// import { useState } from "react";
+import { useState } from "react";
 
+const arrayTasks = [];
 export default function TaskInput({}) {
-  // const [userInput, setUserInput] = useState("Task to be done");
-  // function handleUserInput(newText) {
-  //   setUserInput(() => newText);
-  // }
+  const [userInput, setUserInput] = useState("");
+  function handleUserInput(id, input) {
+    setUserInput(() => {
+      return input;
+    });
+  }
+
+  console.log(userInput);
+  console.log(arrayTasks);
 
   return (
     <>
       <div className={styles.wrapper}>
         <input
           type="text"
-          // value={userInput}
           required
           placeholder="Task to be done"
-          // onChange={(event) => handleUserInput(event.target.value)}
+          minLength={2}
+          onChange={(event) => handleUserInput(event.target.value)}
         />
-        <button>Add</button>
+        <button onClick={() => handleUserInput((arrayTasks[0] = userInput))}>
+          Add
+        </button>
       </div>
     </>
   );
