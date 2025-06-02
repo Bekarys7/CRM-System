@@ -1,11 +1,18 @@
 .wrapper {
-  display: flex;
-  margin: 0 auto;
-  width: 26rem;
-  justify-content: space-between;
-
-  p {
+  button {
+    background-color: rgb(241, 244, 249);
     font-size: 1.5rem;
     color: gray;
+    border-style: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: blue;
+      border-radius: 5px;
+    }
+    &.active {
+      background-color: blue;
+      border-radius: 5px;
+    }
   }
 }
