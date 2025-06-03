@@ -5,6 +5,7 @@ import styles from "./components/App.module.scss";
 import Task from "./components/Task";
 
 function App() {
+  const [count, setCount] = useState(0);
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
 
@@ -12,13 +13,19 @@ function App() {
     setTasks((prevTasks) => {
       const updated = [
         ...prevTasks,
-        { id: 0, task: newTask, completed: false, inWork: false },
+        { id: count, task: newTask, completed: false, inWork: false },
       ];
       console.log(updated);
       return updated;
     });
+    setCount((prevCount) => prevCount + 1);
     setNewTask("");
   }
+
+  // tabcontent = <Task userTasks={tasks} />;
+  // if (tabContent === "In work") {
+  //   <Task></Task>;
+  // }
 
   return (
     <>
@@ -29,10 +36,13 @@ function App() {
       />
 
       <div className={styles.wrapper}>
-        <Tabs>Все</Tabs>
-        <Tabs>В работе</Tabs>
-        <Tabs>Сделано</Tabs>
+        <Tabs>All</Tabs>
+        <Tabs>In work</Tabs>
+        <Tabs>Completed</Tabs>
       </div>
+      <form>
+        <Task userTasks={tasks} />
+      </form>
     </>
   );
 }
