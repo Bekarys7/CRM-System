@@ -2,13 +2,13 @@ import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/editIcon.svg";
 import styles from "../components/Task.module.scss";
 
-export default function Task({ userTasks }) {
-  return userTasks.map((item) => {
+export default function Task({ userToDos }) {
+  return userToDos.map((item) => {
     return (
       <div className={`${styles.control}`} key={item.id}>
         <div>
           <input type="checkbox" id="toDoTasks" name="task" value="task" />
-          <label>{item.name}</label>
+          <label>{item.title}</label>
         </div>
         <div>
           <button className={styles.editButton}>

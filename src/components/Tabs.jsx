@@ -4,7 +4,7 @@ import Task from "./Task";
 export default function Tabs({ children }) {
   return (
     <>
-      <section>
+      <section className={styles.wrapper}>
         <button>{children}</button>
       </section>
     </>
