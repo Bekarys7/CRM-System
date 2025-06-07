@@ -2,7 +2,8 @@
   margin: 1rem auto;
   display: flex;
   width: 26rem;
-  height: 3rem;
+  min-width: 26rem;
+  min-height: 3rem; //
   background-color: white;
   border-radius: 5px;
   align-items: center;

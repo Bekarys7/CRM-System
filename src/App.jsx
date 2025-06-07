@@ -3,10 +3,12 @@ import Tabs from "./components/Tabs";
 import TaskInput from "./components/TaskInput";
 import styles from "./components/App.module.scss";
 import Task from "./components/Task";
+import { SendUserTodos, deleteUserTodos } from "./http.js";
 
 function App() {
   const [userToDos, setUserToDos] = useState([]);
-  const [error, setError] = useState();
+  const [userTodosText, setUserTodosText] = useState("");
+  const [errorPage, setError] = useState();
 
   useEffect(() => {
     async function fetchUserTodos() {
@@ -18,24 +20,53 @@ function App() {
         }
         setUserToDos(resData.data);
       } catch (error) {
-        setError(error);
+        setError(errorPage);
       }
     }
-
     fetchUserTodos();
   }, []);
-  console.log(userToDos);
-  console.log(userToDos);
+
+  async function handleUserTodos() {
+    const newTodo = { isDone: false, title: userTodosText };
+
+    try {
+      const savedTodo = await SendUserTodos(newTodo);
+
+      setUserToDos((prevUserTodos) => {
+        const updated = [...prevUserTodos, savedTodo];
+        return updated;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setUserTodosText("");
+  }
+
+  async function handleDelete(id) {
+    setUserToDos((prevUserTodos) =>
+      prevUserTodos.filter((item) => item.id !== id)
+    );
+    try {
+      await deleteUserTodos(id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
-      <TaskInput />
+      <TaskInput
+        addTodo={handleUserTodos}
+        userTodosText={userTodosText}
+        onChange={(event) => setUserTodosText(event.target.value)}
+      />
 
       <div className={styles.wrapper}>
-        <Tabs userToDos={userToDos}>Все</Tabs>
+        <Tabs>Все</Tabs>
         <Tabs>В работе</Tabs>
         <Tabs>Сделано</Tabs>
       </div>
-      <Task userToDos={userToDos} />
+      <Task userToDos={userToDos} deleteTask={handleDelete} />
     </>
   );
 }
