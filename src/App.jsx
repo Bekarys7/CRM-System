@@ -62,9 +62,9 @@ function App() {
       />
 
       <div className={styles.wrapper}>
-        <Tabs>Все</Tabs>
-        <Tabs>В работе</Tabs>
-        <Tabs>Сделано</Tabs>
+        <Tabs>All</Tabs>
+        <Tabs>In work</Tabs>
+        <Tabs>Completed</Tabs>
       </div>
       <Task userToDos={userToDos} deleteTask={handleDelete} />
     </>
