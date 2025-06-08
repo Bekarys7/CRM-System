@@ -101,21 +101,34 @@ function App() {
   }
 
   return (
-    <>
+    <div className={styles.allWrapper}>
       <TaskInput
         addTodo={handleUserTodos}
         userTodosText={userTodosText}
         onChange={(event) => setUserTodosText(event.target.value)}
+        setUserTodosText={setUserTodosText}
       />
 
       <div className={styles.wrapper}>
-        <Tabs tab={tab} onChange={() => handleTab("All")}>
+        <Tabs
+          tab={tab}
+          onChange={() => handleTab("All")}
+          isSelected={tab === "All"}
+        >
           All
         </Tabs>
-        <Tabs tab={tab} onChange={() => handleTab("In work")}>
+        <Tabs
+          tab={tab}
+          onChange={() => handleTab("In work")}
+          isSelected={tab === "In work"}
+        >
           In work
         </Tabs>
-        <Tabs tab={tab} onChange={() => handleTab("Completed")}>
+        <Tabs
+          tab={tab}
+          onChange={() => handleTab("Completed")}
+          isSelected={tab === "Completed"}
+        >
           Completed
         </Tabs>
       </div>
@@ -126,7 +139,7 @@ function App() {
         toggleCheckBox={handleCheckbox}
         tab={tab}
       />
-    </>
+    </div>
   );
 }
 

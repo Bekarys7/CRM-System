@@ -2,16 +2,17 @@
   button {
     background-color: rgb(241, 244, 249);
     font-size: 1.5rem;
-    color: gray;
+    color: rgb(7, 86, 139);
     border-style: none;
     cursor: pointer;
 
+    transition: background-color 0.7s;
     &:hover {
-      background-color: blue;
+      background-color: rgba(42, 132, 235, 0.808);
       border-radius: 5px;
     }
     &.active {
-      background-color: blue;
+      background-color: rgba(42, 132, 235, 0.808);
       border-radius: 5px;
     }
   }

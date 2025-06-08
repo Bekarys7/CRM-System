@@ -1,16 +1,23 @@
 .control {
   margin: 1rem auto;
   display: flex;
-  width: 26rem;
+  width: 47rem;
   min-width: 26rem;
   min-height: 3rem;
-  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 8px;
+  background-color: rgb(241, 244, 249);
   border-radius: 5px;
   align-items: center;
   justify-content: space-between;
 
+  .titleWrapper {
+    width: 39rem;
+    max-width: 100%;
+    word-break: break-word;
+  }
+
   .inputEdit {
-    width: 26rem;
+    width: 47rem;
     min-height: 3rem;
     border-radius: 5px;
   }

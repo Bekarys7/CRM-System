@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/editIcon.svg";
 import styles from "../components/Task.module.scss";
-import Input from "./input";
 
 export default function Task({
   userToDos,
   deleteTask,
   editTask,
   toggleCheckBox,
-  tab,
 }) {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
@@ -37,7 +35,7 @@ export default function Task({
         {isEditing ? (
           <>
             <div className={styles.control}>
-              <Input
+              <input
                 type="text"
                 className={styles.inputEdit}
                 onChange={(e) => setEditText(e.target.value)}
@@ -45,8 +43,27 @@ export default function Task({
                 placeholder="Edit task"
               />
             </div>
+            <div className={styles.validation}>
+              {editText.trim() === "" ? (
+                <p>Enter the task name</p>
+              ) : editText.length < 2 ? (
+                <p>Minimum of 2 characters</p>
+              ) : editText.length >= 64 ? (
+                <p>Maximum of 64 characters</p>
+              ) : null}
+            </div>
+
             <div className={styles.buttonControl}>
-              <button onClick={() => handleSaveEdit(item.id)}>Save</button>
+              <button
+                onClick={() => handleSaveEdit(item.id)}
+                disabled={
+                  editText.trim() === "" ||
+                  editText.length < 2 ||
+                  editText.length >= 64
+                }
+              >
+                Save
+              </button>
               <button onClick={handleCancelEdit}>Cancel</button>
             </div>
           </>
@@ -54,12 +71,10 @@ export default function Task({
           <div className={styles.control}>
             <input
               type="checkbox"
-              name="task"
-              value="task"
               checked={item.isDone}
               onChange={() => toggleCheckBox(item.id)}
             />
-            <label>{item.title}</label>
+            <p className={styles.titleWrapper}>{item.title}</p>
             <div>
               <button
                 onClick={() => deleteTask(item.id)}
