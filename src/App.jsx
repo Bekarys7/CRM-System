@@ -9,6 +9,11 @@ function App() {
   const [userToDos, setUserToDos] = useState([]);
   const [userTodosText, setUserTodosText] = useState("");
   const [errorPage, setError] = useState();
+  const [tab, setTab] = useState("All");
+
+  function handleTab(tabName) {
+    setTab((prev) => (prev = tabName));
+  }
 
   console.log(userToDos);
 
@@ -86,6 +91,15 @@ function App() {
     }
   }
 
+  let filteredToDos = null;
+  if (tab === "All") {
+    filteredToDos = userToDos;
+  } else if (tab === "In work") {
+    filteredToDos = userToDos.filter((item) => item.isDone === false);
+  } else if (tab === "Completed") {
+    filteredToDos = userToDos.filter((item) => item.isDone === true);
+  }
+
   return (
     <>
       <TaskInput
@@ -95,18 +109,23 @@ function App() {
       />
 
       <div className={styles.wrapper}>
-        <Tabs>
-          All{" "}
-          <Task
-            userToDos={userToDos}
-            deleteTask={handleDelete}
-            editTask={handleEdit}
-            toggleCheckBox={handleCheckbox}
-          />
+        <Tabs tab={tab} onChange={() => handleTab("All")}>
+          All
         </Tabs>
-        <Tabs>In work</Tabs>
-        <Tabs>Completed</Tabs>
+        <Tabs tab={tab} onChange={() => handleTab("In work")}>
+          In work
+        </Tabs>
+        <Tabs tab={tab} onChange={() => handleTab("Completed")}>
+          Completed
+        </Tabs>
       </div>
+      <Task
+        userToDos={filteredToDos}
+        deleteTask={handleDelete}
+        editTask={handleEdit}
+        toggleCheckBox={handleCheckbox}
+        tab={tab}
+      />
     </>
   );
 }

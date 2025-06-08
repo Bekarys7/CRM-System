@@ -9,6 +9,7 @@ export default function Task({
   deleteTask,
   editTask,
   toggleCheckBox,
+  tab,
 }) {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
