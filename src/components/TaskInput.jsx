@@ -9,7 +9,7 @@ export default function TaskInput({ onChange, userTodosText, addTodo }) {
         type="text"
         onChange={onChange}
         value={userTodosText}
-        placholder={"Task to be done"}
+        placeholder={"Task To Be Done"}
       />
       <button onClick={addTodo}>Add</button>
     </div>

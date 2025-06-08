@@ -42,3 +42,20 @@ export async function deleteUserTodos(id) {
     console.log("delete error:", error);
   }
 }
+
+export async function editUserTodos(id, task) {
+  try {
+    const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(task),
+    });
+    if (!response.ok) {
+      throw new Error("Error occurred");
+    }
+  } catch (error) {
+    console.log("delete error:", error);
+  }
+}

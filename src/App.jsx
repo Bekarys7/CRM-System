@@ -3,12 +3,14 @@ import Tabs from "./components/Tabs";
 import TaskInput from "./components/TaskInput";
 import styles from "./components/App.module.scss";
 import Task from "./components/Task";
-import { SendUserTodos, deleteUserTodos } from "./http.js";
+import { SendUserTodos, deleteUserTodos, editUserTodos } from "./http.js";
 
 function App() {
   const [userToDos, setUserToDos] = useState([]);
   const [userTodosText, setUserTodosText] = useState("");
   const [errorPage, setError] = useState();
+
+  console.log(userToDos);
 
   useEffect(() => {
     async function fetchUserTodos() {
@@ -53,6 +55,37 @@ function App() {
     }
   }
 
+  async function handleEdit(id, newTask) {
+    setUserToDos((prevTodos) => {
+      return prevTodos.map((item) => {
+        if (item.id === id) {
+          return { ...item, title: newTask };
+        }
+        return item;
+      });
+    });
+    try {
+      await editUserTodos(id, { title: newTask });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleCheckbox(id) {
+    const currentTask = userToDos.find((item) => item.id === id);
+
+    setUserToDos((prevTodos) =>
+      prevTodos.map((item) => {
+        return item.id === id ? { ...item, isDone: !item.isDone } : item;
+      })
+    );
+    try {
+      await editUserTodos(id, { isDone: !currentTask.isDone });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       <TaskInput
@@ -62,11 +95,18 @@ function App() {
       />
 
       <div className={styles.wrapper}>
-        <Tabs>All</Tabs>
+        <Tabs>
+          All{" "}
+          <Task
+            userToDos={userToDos}
+            deleteTask={handleDelete}
+            editTask={handleEdit}
+            toggleCheckBox={handleCheckbox}
+          />
+        </Tabs>
         <Tabs>In work</Tabs>
         <Tabs>Completed</Tabs>
       </div>
-      <Task userToDos={userToDos} deleteTask={handleDelete} />
     </>
   );
 }
