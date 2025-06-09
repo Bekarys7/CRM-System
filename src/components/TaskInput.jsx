@@ -8,6 +8,7 @@ export default function TaskInput({
   setUserTodosText,
 }) {
   const [onFocusInput, setOnFocusInput] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   return (
     <>
@@ -21,6 +22,7 @@ export default function TaskInput({
             onFocus={() => setOnFocusInput(true)}
             onBlur={() => {
               setOnFocusInput(false);
+              setIsClicked(false);
               if (!userTodosText.trim()) {
                 setUserTodosText("");
               }
@@ -29,24 +31,33 @@ export default function TaskInput({
           />
         </form>
         <button
-          onClick={addTodo}
-          disabled={
-            userTodosText.trim() === "" ||
-            userTodosText.length < 2 ||
-            userTodosText.length > 65
-          }
+          onClick={() => {
+            const trimText = userTodosText.trim();
+            if (
+              trimText === "" ||
+              trimText.length < 2 ||
+              trimText.length >= 64
+            ) {
+              setIsClicked((prev) => (prev ? prev : true));
+            } else {
+              addTodo();
+              setIsClicked(false);
+            }
+          }}
         >
           Add
         </button>
       </div>
       <div
-        className={`${styles.validation} ${onFocusInput ? styles.visible : ""}`}
+        className={`${styles.validation} ${
+          onFocusInput || isClicked ? styles.visible : ""
+        }`}
       >
-        {userTodosText.trim() === "" && onFocusInput === true ? (
+        {(onFocusInput || isClicked) && userTodosText.trim() === "" ? (
           <p>Enter the task name</p>
-        ) : userTodosText.length < 2 && onFocusInput === true ? (
+        ) : (onFocusInput || isClicked) && userTodosText.trim().length < 2 ? (
           <p>Minimum of 2 characters</p>
-        ) : userTodosText.length >= 64 && onFocusInput === true ? (
+        ) : (onFocusInput || isClicked) && userTodosText.trim().length >= 64 ? (
           <p>Maximum of 64 characters</p>
         ) : null}
       </div>

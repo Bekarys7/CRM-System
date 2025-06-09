@@ -8,12 +8,12 @@
 
     transition: background-color 0.7s;
     &:hover {
-      background-color: rgba(42, 132, 235, 0.808);
-      border-radius: 5px;
+      color: rgba(42, 132, 235, 0.808);
+      border-bottom: 2px solid;
     }
     &.active {
-      background-color: rgba(42, 132, 235, 0.808);
-      border-radius: 5px;
+      color: rgba(42, 132, 235, 0.808);
+      border-bottom: 2px solid;
     }
   }
 }

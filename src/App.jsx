@@ -113,7 +113,7 @@ function App() {
           onChange={() => handleTab("All")}
           isSelected={tab === "All"}
         >
-          All
+          All{`(${userToDos.length})`}
         </Tabs>
         <Tabs
           tab={tab}
