@@ -74,7 +74,13 @@ export default function Task({
               checked={item.isDone}
               onChange={() => toggleCheckBox(item.id)}
             />
-            <p className={styles.titleWrapper}>{item.title}</p>
+            <p
+              className={`${styles.titleWrapper} ${
+                item.isDone ? styles.completed : undefined
+              }`}
+            >
+              {item.title}
+            </p>
             <div>
               <button
                 onClick={() => deleteTask(item.id)}

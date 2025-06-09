@@ -16,6 +16,10 @@
     word-break: break-word;
   }
 
+  .completed {
+    text-decoration: line-through;
+    color: gray;
+  }
   .inputEdit {
     width: 47rem;
     min-height: 3rem;
