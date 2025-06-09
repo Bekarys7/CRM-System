@@ -1,0 +1,66 @@
+.control {
+  margin: 1rem auto;
+  display: flex;
+  width: 47rem;
+  min-width: 26rem;
+  min-height: 3rem;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 8px;
+  background-color: rgb(241, 244, 249);
+  border-radius: 5px;
+  align-items: center;
+  justify-content: space-between;
+
+  .titleWrapper {
+    width: 39rem;
+    max-width: 100%;
+    word-break: break-word;
+  }
+
+  .inputEdit {
+    width: 47rem;
+    min-height: 3rem;
+    border-radius: 5px;
+  }
+
+  button {
+    width: 2rem;
+    height: 2rem;
+    margin: 0.5rem;
+    border-radius: 4px;
+    border-style: none;
+    img {
+      width: 1rem;
+    }
+  }
+
+  .editButton {
+    background-color: rgba(42, 132, 235, 0.808);
+  }
+  .deleteButton {
+    background-color: rgba(253, 103, 86);
+  }
+}
+
+.buttonControl {
+  width: 26rem;
+  margin: 0 auto;
+  display: flex;
+  border-radius: 5px;
+
+  button {
+    width: 6rem;
+    height: 1.5rem;
+    margin: 1rem 11rem 0rem -10.5rem;
+    border-radius: 4px;
+  }
+}
+.validation {
+  font-size: 1rem;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  color: rgb(248, 163, 163);
+  margin-left: 6.4rem;
+  bottom: 5.1rem;
+  text-shadow: 1px 1px 2px pink;
+}

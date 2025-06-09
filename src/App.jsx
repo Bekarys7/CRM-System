@@ -1,7 +1,146 @@
-import "./App.css";
+import { useEffect, useState } from "react";
+import Tabs from "./components/Tabs";
+import TaskInput from "./components/TaskInput";
+import styles from "./components/App.module.scss";
+import Task from "./components/Task";
+import { SendUserTodos, deleteUserTodos, editUserTodos } from "./http.js";
 
 function App() {
-  return <></>;
+  const [userToDos, setUserToDos] = useState([]);
+  const [userTodosText, setUserTodosText] = useState("");
+  const [errorPage, setError] = useState();
+  const [tab, setTab] = useState("All");
+
+  function handleTab(tabName) {
+    setTab((prev) => (prev = tabName));
+  }
+
+  console.log(userToDos);
+
+  useEffect(() => {
+    async function fetchUserTodos() {
+      try {
+        const response = await fetch("https://easydev.club/api/v1/todos");
+        const resData = await response.json();
+        if (!response.ok) {
+          throw new Error("Error occurred");
+        }
+        setUserToDos(resData.data);
+      } catch (error) {
+        setError(errorPage);
+      }
+    }
+    fetchUserTodos();
+  }, []);
+
+  async function handleUserTodos() {
+    const newTodo = { isDone: false, title: userTodosText };
+
+    try {
+      const savedTodo = await SendUserTodos(newTodo);
+
+      setUserToDos((prevUserTodos) => {
+        const updated = [...prevUserTodos, savedTodo];
+        return updated;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setUserTodosText("");
+  }
+
+  async function handleDelete(id) {
+    setUserToDos((prevUserTodos) =>
+      prevUserTodos.filter((item) => item.id !== id)
+    );
+    try {
+      await deleteUserTodos(id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleEdit(id, newTask) {
+    setUserToDos((prevTodos) => {
+      return prevTodos.map((item) => {
+        if (item.id === id) {
+          return { ...item, title: newTask };
+        }
+        return item;
+      });
+    });
+    try {
+      await editUserTodos(id, { title: newTask });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleCheckbox(id) {
+    const currentTask = userToDos.find((item) => item.id === id);
+
+    setUserToDos((prevTodos) =>
+      prevTodos.map((item) => {
+        return item.id === id ? { ...item, isDone: !item.isDone } : item;
+      })
+    );
+    try {
+      await editUserTodos(id, { isDone: !currentTask.isDone });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  let filteredToDos = null;
+  if (tab === "All") {
+    filteredToDos = userToDos;
+  } else if (tab === "In work") {
+    filteredToDos = userToDos.filter((item) => item.isDone === false);
+  } else if (tab === "Completed") {
+    filteredToDos = userToDos.filter((item) => item.isDone === true);
+  }
+
+  return (
+    <div className={styles.allWrapper}>
+      <TaskInput
+        addTodo={handleUserTodos}
+        userTodosText={userTodosText}
+        onChange={(event) => setUserTodosText(event.target.value)}
+        setUserTodosText={setUserTodosText}
+      />
+
+      <div className={styles.wrapper}>
+        <Tabs
+          tab={tab}
+          onChange={() => handleTab("All")}
+          isSelected={tab === "All"}
+        >
+          All
+        </Tabs>
+        <Tabs
+          tab={tab}
+          onChange={() => handleTab("In work")}
+          isSelected={tab === "In work"}
+        >
+          In work
+        </Tabs>
+        <Tabs
+          tab={tab}
+          onChange={() => handleTab("Completed")}
+          isSelected={tab === "Completed"}
+        >
+          Completed
+        </Tabs>
+      </div>
+      <Task
+        userToDos={filteredToDos}
+        deleteTask={handleDelete}
+        editTask={handleEdit}
+        toggleCheckBox={handleCheckbox}
+        tab={tab}
+      />
+    </div>
+  );
 }
 
 export default App;
