@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Tabs from "./components/Tabs";
 import TaskInput from "./components/TaskInput";
-import styles from "./components/App.module.scss";
+import styles from "./App.module.scss";
 import Task from "./components/Task";
 import { SendUserTodos, deleteUserTodos, editUserTodos } from "./http.js";
 
@@ -14,8 +14,6 @@ function App() {
   function handleTab(tabName) {
     setTab((prev) => (prev = tabName));
   }
-
-  console.log(userToDos);
 
   useEffect(() => {
     async function fetchUserTodos() {
