@@ -6,41 +6,48 @@ import Task from "./components/Task";
 import { SendUserTodos, deleteUserTodos, editUserTodos } from "./http.js";
 
 function App() {
+  const [allToDosInfo, setAllToDosInfo] = useState([]);
   const [userToDos, setUserToDos] = useState([]);
   const [userTodosText, setUserTodosText] = useState("");
   const [errorPage, setError] = useState();
   const [tab, setTab] = useState("All");
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleTab(tabName) {
     setTab((prev) => (prev = tabName));
   }
 
   useEffect(() => {
-    async function fetchUserTodos() {
-      try {
-        const response = await fetch("https://easydev.club/api/v1/todos");
-        const resData = await response.json();
-        if (!response.ok) {
-          throw new Error("Error occurred");
-        }
-        setUserToDos(resData.data);
-      } catch (error) {
-        setError(errorPage);
-      }
-    }
     fetchUserTodos();
-  }, []);
+  }, [tab]);
 
-  async function handleUserTodos() {
+  async function fetchUserTodos() {
+    try {
+      const response = await fetch("https://easydev.club/api/v1/todos");
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error("Error occurred");
+      }
+      setAllToDosInfo(resData);
+      setIsLoading(true);
+      if (tab === "All") {
+        setUserToDos(resData.data);
+      } else if (tab === "In work") {
+        setUserToDos(resData.data.filter((item) => item.isDone === false));
+      } else if (tab === "Completed") {
+        setUserToDos(resData.data.filter((item) => item.isDone === true));
+      }
+    } catch (error) {
+      setError(errorPage);
+    }
+  }
+
+  async function handleAddUserTodos() {
     const newTodo = { isDone: false, title: userTodosText };
 
     try {
-      const savedTodo = await SendUserTodos(newTodo);
-
-      setUserToDos((prevUserTodos) => {
-        const updated = [...prevUserTodos, savedTodo];
-        return updated;
-      });
+      await SendUserTodos(newTodo);
+      fetchUserTodos();
     } catch (error) {
       console.log(error);
     }
@@ -53,6 +60,7 @@ function App() {
     );
     try {
       await deleteUserTodos(id);
+      await fetchUserTodos();
     } catch (error) {
       console.log(error);
     }
@@ -69,6 +77,7 @@ function App() {
     });
     try {
       await editUserTodos(id, { title: newTask });
+      await fetchUserTodos();
     } catch (error) {
       console.log(error);
     }
@@ -76,7 +85,7 @@ function App() {
 
   async function handleCheckbox(id) {
     const currentTask = userToDos.find((item) => item.id === id);
-
+    console.log(allToDosInfo);
     setUserToDos((prevTodos) =>
       prevTodos.map((item) => {
         return item.id === id ? { ...item, isDone: !item.isDone } : item;
@@ -84,24 +93,16 @@ function App() {
     );
     try {
       await editUserTodos(id, { isDone: !currentTask.isDone });
+      await fetchUserTodos();
     } catch (error) {
       console.log(error);
     }
   }
 
-  let filteredToDos = null;
-  if (tab === "All") {
-    filteredToDos = userToDos;
-  } else if (tab === "In work") {
-    filteredToDos = userToDos.filter((item) => item.isDone === false);
-  } else if (tab === "Completed") {
-    filteredToDos = userToDos.filter((item) => item.isDone === true);
-  }
-
   return (
     <div className={styles.allWrapper}>
       <TaskInput
-        addTodo={handleUserTodos}
+        addTodo={handleAddUserTodos}
         userTodosText={userTodosText}
         onChange={(event) => setUserTodosText(event.target.value)}
         setUserTodosText={setUserTodosText}
@@ -113,25 +114,25 @@ function App() {
           onChange={() => handleTab("All")}
           isSelected={tab === "All"}
         >
-          All{`(${userToDos.length})`}
+          All({isLoading ? allToDosInfo.info.all : "..."})
         </Tabs>
         <Tabs
           tab={tab}
           onChange={() => handleTab("In work")}
           isSelected={tab === "In work"}
         >
-          In work
+          In work({isLoading ? allToDosInfo.info.inWork : "..."})
         </Tabs>
         <Tabs
           tab={tab}
           onChange={() => handleTab("Completed")}
           isSelected={tab === "Completed"}
         >
-          Completed
+          Completed({isLoading ? allToDosInfo.info.completed : "..."})
         </Tabs>
       </div>
       <Task
-        userToDos={filteredToDos}
+        userToDos={userToDos}
         deleteTask={handleDelete}
         editTask={handleEdit}
         toggleCheckBox={handleCheckbox}
