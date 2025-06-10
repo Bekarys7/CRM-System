@@ -3,13 +3,17 @@ import Tabs from "./components/Tabs";
 import TaskInput from "./components/TaskInput";
 import styles from "./App.module.scss";
 import Task from "./components/Task";
-import { SendUserTodos, deleteUserTodos, editUserTodos } from "./http.js";
+import {
+  SendUserTodos,
+  deleteUserTodos,
+  editUserTodos,
+  fetchUserTodos,
+} from "./api/http.js";
 
 function App() {
   const [allToDosInfo, setAllToDosInfo] = useState([]);
   const [userToDos, setUserToDos] = useState([]);
   const [userTodosText, setUserTodosText] = useState("");
-  const [errorPage, setError] = useState();
   const [tab, setTab] = useState("All");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,27 +22,23 @@ function App() {
   }
 
   useEffect(() => {
-    fetchUserTodos();
+    handlefetchUserTodos();
   }, [tab]);
 
-  async function fetchUserTodos() {
+  async function handlefetchUserTodos() {
     try {
-      const response = await fetch("https://easydev.club/api/v1/todos");
-      const resData = await response.json();
-      if (!response.ok) {
-        throw new Error("Error occurred");
-      }
-      setAllToDosInfo(resData);
+      const ToDoArray = await fetchUserTodos();
+      setAllToDosInfo(ToDoArray);
       setIsLoading(true);
       if (tab === "All") {
-        setUserToDos(resData.data);
+        setUserToDos(ToDoArray.data);
       } else if (tab === "In work") {
-        setUserToDos(resData.data.filter((item) => item.isDone === false));
+        setUserToDos(ToDoArray.data.filter((item) => item.isDone === false));
       } else if (tab === "Completed") {
-        setUserToDos(resData.data.filter((item) => item.isDone === true));
+        setUserToDos(ToDoArray.data.filter((item) => item.isDone === true));
       }
     } catch (error) {
-      setError(errorPage);
+      console.log(error);
     }
   }
 
@@ -47,7 +47,7 @@ function App() {
 
     try {
       await SendUserTodos(newTodo);
-      fetchUserTodos();
+      handlefetchUserTodos();
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +60,7 @@ function App() {
     );
     try {
       await deleteUserTodos(id);
-      await fetchUserTodos();
+      await handlefetchUserTodos();
     } catch (error) {
       console.log(error);
     }
@@ -77,7 +77,7 @@ function App() {
     });
     try {
       await editUserTodos(id, { title: newTask });
-      await fetchUserTodos();
+      await handlefetchUserTodos();
     } catch (error) {
       console.log(error);
     }
@@ -93,7 +93,7 @@ function App() {
     );
     try {
       await editUserTodos(id, { isDone: !currentTask.isDone });
-      await fetchUserTodos();
+      await handlefetchUserTodos();
     } catch (error) {
       console.log(error);
     }

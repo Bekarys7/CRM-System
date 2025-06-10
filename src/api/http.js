@@ -17,14 +17,12 @@ export async function SendUserTodos(userToDos) {
 }
 
 export async function fetchUserTodos() {
-  try {
-    const response = await fetch("https://easydev.club/api/v1/todos");
-    const resData = await response.json();
-    if (!response.ok) {
-      throw new Error("Error occurred");
-    }
-    return resData;
-  } catch (error) {}
+  const response = await fetch("https://easydev.club/api/v1/todos");
+  const resData = await response.json();
+  if (!response.ok) {
+    throw new Error("Error occurred");
+  }
+  return resData;
 }
 
 export async function deleteUserTodos(id) {
