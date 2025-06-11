@@ -2,7 +2,7 @@ import TodoItem from "./TodoItem";
 
 export default function TodoList({
   userToDos,
-  setUserToDos,
+  //   setUserToDos,
   handlefetchUserTodos,
 }) {
   return userToDos.map((item) => {
@@ -10,7 +10,7 @@ export default function TodoList({
       <div key={item.id}>
         <TodoItem
           item={item}
-          setUserToDos={setUserToDos}
+          //   setUserToDos={setUserToDos}
           handlefetchUserTodos={handlefetchUserTodos}
           userToDos={userToDos}
         />

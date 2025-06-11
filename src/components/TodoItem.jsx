@@ -7,7 +7,7 @@ import { deleteUserTodos, editUserTodos } from "../api/http";
 export default function TodoItem({
   userToDos,
   item,
-  setUserToDos,
+  //   setUserToDos,
   handlefetchUserTodos,
 }) {
   const [editingId, setEditingId] = useState(null);
@@ -15,9 +15,9 @@ export default function TodoItem({
   const isEditing = editingId === item.id;
 
   async function handleDelete(id) {
-    setUserToDos((prevUserTodos) =>
-      prevUserTodos.filter((item) => item.id !== id)
-    );
+    // setUserToDos((prevUserTodos) =>
+    //   prevUserTodos.filter((item) => item.id !== id)
+    // );
     try {
       await deleteUserTodos(id);
       await handlefetchUserTodos();
@@ -27,14 +27,14 @@ export default function TodoItem({
   }
 
   async function handleEdit(id, newTask) {
-    setUserToDos((prevTodos) => {
-      return prevTodos.map((item) => {
-        if (item.id === id) {
-          return { ...item, title: newTask };
-        }
-        return item;
-      });
-    });
+    // setUserToDos((prevTodos) => {
+    //   return prevTodos.map((item) => {
+    //     if (item.id === id) {
+    //       return { ...item, title: newTask };
+    //     }
+    //     return item;
+    //   });
+    // });
     try {
       await editUserTodos(id, { title: newTask });
       await handlefetchUserTodos();
@@ -44,13 +44,14 @@ export default function TodoItem({
   }
 
   async function handleCheckbox(id) {
-    const currentTask = userToDos.find((item) => item.id === id);
-    setUserToDos((prevTodos) =>
-      prevTodos.map((item) => {
-        return item.id === id ? { ...item, isDone: !item.isDone } : item;
-      })
-    );
+    // const currentTask = userToDos.find((item) => item.id === id);
+    // setUserToDos((prevTodos) =>
+    //   prevTodos.map((item) => {
+    //     return item.id === id ? { ...item, isDone: !item.isDone } : item;
+    //   })
+    // );
     try {
+      const currentTask = userToDos.find((item) => item.id === id);
       await editUserTodos(id, { isDone: !currentTask.isDone });
       await handlefetchUserTodos();
     } catch (error) {

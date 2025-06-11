@@ -12,9 +12,8 @@ export default function AddTaskInput({
   const [isClicked, setIsClicked] = useState(false);
 
   async function handleAddUserTodos() {
-    const newTodo = { isDone: false, title: userTodosText };
-
     try {
+      const newTodo = { isDone: false, title: userTodosText };
       await SendUserTodos(newTodo);
       handlefetchUserTodos();
     } catch (error) {
