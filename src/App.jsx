@@ -42,18 +42,6 @@ function App() {
     }
   }
 
-  async function handleAddUserTodos() {
-    const newTodo = { isDone: false, title: userTodosText };
-
-    try {
-      await SendUserTodos(newTodo);
-      handlefetchUserTodos();
-    } catch (error) {
-      console.log(error);
-    }
-    setUserTodosText("");
-  }
-
   async function handleDelete(id) {
     setUserToDos((prevUserTodos) =>
       prevUserTodos.filter((item) => item.id !== id)
@@ -102,10 +90,10 @@ function App() {
   return (
     <div className={styles.allWrapper}>
       <AddTaskInput
-        addTodo={handleAddUserTodos}
         userTodosText={userTodosText}
         onChange={(event) => setUserTodosText(event.target.value)}
         setUserTodosText={setUserTodosText}
+        handlefetchUserTodos={handlefetchUserTodos}
       />
 
       <div className={styles.wrapper}>
