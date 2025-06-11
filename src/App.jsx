@@ -3,7 +3,7 @@ import Tabs from "./components/Tabs";
 import AddTaskInput from "./components/AddTaskInput.jsx";
 import styles from "./App.module.scss";
 import TodoList from "./components/TodoList.jsx";
-import { deleteUserTodos, editUserTodos, fetchUserTodos } from "./api/http.js";
+import { editUserTodos, fetchUserTodos } from "./api/http.js";
 
 function App() {
   const [allToDosInfo, setAllToDosInfo] = useState([]);
@@ -32,39 +32,6 @@ function App() {
       } else if (tab === "Completed") {
         setUserToDos(ToDoArray.data.filter((item) => item.isDone === true));
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function handleEdit(id, newTask) {
-    setUserToDos((prevTodos) => {
-      return prevTodos.map((item) => {
-        if (item.id === id) {
-          return { ...item, title: newTask };
-        }
-        return item;
-      });
-    });
-    try {
-      await editUserTodos(id, { title: newTask });
-      await handlefetchUserTodos();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function handleCheckbox(id) {
-    const currentTask = userToDos.find((item) => item.id === id);
-    console.log(allToDosInfo);
-    setUserToDos((prevTodos) =>
-      prevTodos.map((item) => {
-        return item.id === id ? { ...item, isDone: !item.isDone } : item;
-      })
-    );
-    try {
-      await editUserTodos(id, { isDone: !currentTask.isDone });
-      await handlefetchUserTodos();
     } catch (error) {
       console.log(error);
     }
@@ -104,8 +71,6 @@ function App() {
       </div>
       <TodoList
         userToDos={userToDos}
-        editTask={handleEdit}
-        toggleCheckBox={handleCheckbox}
         tab={tab}
         setUserToDos={setUserToDos}
         handlefetchUserTodos={handlefetchUserTodos}
