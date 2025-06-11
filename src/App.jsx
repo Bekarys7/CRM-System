@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Tabs from "./components/Tabs";
-import TaskInput from "./components/TaskInput";
+import AddTaskInput from "./components/AddTaskInput.jsx";
 import styles from "./App.module.scss";
-import Task from "./components/Task";
+import TodoList from "./components/TodoList.jsx";
 import {
   SendUserTodos,
   deleteUserTodos,
@@ -101,7 +101,7 @@ function App() {
 
   return (
     <div className={styles.allWrapper}>
-      <TaskInput
+      <AddTaskInput
         addTodo={handleAddUserTodos}
         userTodosText={userTodosText}
         onChange={(event) => setUserTodosText(event.target.value)}
@@ -131,7 +131,7 @@ function App() {
           Completed({isLoading ? allToDosInfo.info.completed : "..."})
         </Tabs>
       </div>
-      <Task
+      <TodoList
         userToDos={userToDos}
         deleteTask={handleDelete}
         editTask={handleEdit}

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/editIcon.svg";
-import styles from "../components/Task.module.scss";
+import styles from "../components/TaskNeNujen.module.scss";
 
-export default function Task({
+export default function TaskNeNujen({
   userToDos,
   deleteTask,
   editTask,

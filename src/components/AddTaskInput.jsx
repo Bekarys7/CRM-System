@@ -1,7 +1,7 @@
-import styles from "../components/TaskInput.module.scss";
+import styles from "../components/AddTaskInput.module.scss";
 import { useState } from "react";
 
-export default function TaskInput({
+export default function AddTaskInput({
   onChange,
   userTodosText,
   addTodo,
