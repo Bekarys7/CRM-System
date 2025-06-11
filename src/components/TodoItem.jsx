@@ -2,12 +2,15 @@ import { useState } from "react";
 import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/editIcon.svg";
 import styles from "../components/TodoItem.module.scss";
+import { deleteUserTodos } from "../api/http";
 
 export default function TodoItem({
   deleteTask,
   editTask,
   toggleCheckBox,
   item,
+  setUserToDos,
+  handlefetchUserTodos,
 }) {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
@@ -26,6 +29,18 @@ export default function TodoItem({
   function handleSaveEdit(id) {
     editTask(id, editText);
     handleCancelEdit();
+  }
+
+  async function handleDelete(id) {
+    setUserToDos((prevUserTodos) =>
+      prevUserTodos.filter((item) => item.id !== id)
+    );
+    try {
+      await deleteUserTodos(id);
+      await handlefetchUserTodos();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -81,7 +96,7 @@ export default function TodoItem({
           </p>
           <div>
             <button
-              onClick={() => deleteTask(item.id)}
+              onClick={() => handleDelete(item.id)}
               className={styles.editButton}
             >
               <img src={deleteIcon} alt="Delete" />

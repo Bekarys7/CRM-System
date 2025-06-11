@@ -3,12 +3,7 @@ import Tabs from "./components/Tabs";
 import AddTaskInput from "./components/AddTaskInput.jsx";
 import styles from "./App.module.scss";
 import TodoList from "./components/TodoList.jsx";
-import {
-  SendUserTodos,
-  deleteUserTodos,
-  editUserTodos,
-  fetchUserTodos,
-} from "./api/http.js";
+import { deleteUserTodos, editUserTodos, fetchUserTodos } from "./api/http.js";
 
 function App() {
   const [allToDosInfo, setAllToDosInfo] = useState([]);
@@ -37,18 +32,6 @@ function App() {
       } else if (tab === "Completed") {
         setUserToDos(ToDoArray.data.filter((item) => item.isDone === true));
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function handleDelete(id) {
-    setUserToDos((prevUserTodos) =>
-      prevUserTodos.filter((item) => item.id !== id)
-    );
-    try {
-      await deleteUserTodos(id);
-      await handlefetchUserTodos();
     } catch (error) {
       console.log(error);
     }
@@ -121,10 +104,11 @@ function App() {
       </div>
       <TodoList
         userToDos={userToDos}
-        deleteTask={handleDelete}
         editTask={handleEdit}
         toggleCheckBox={handleCheckbox}
         tab={tab}
+        setUserToDos={setUserToDos}
+        handlefetchUserTodos={handlefetchUserTodos}
       />
     </div>
   );

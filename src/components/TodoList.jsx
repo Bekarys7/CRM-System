@@ -9,6 +9,8 @@ export default function TodoList({
   deleteTask,
   editTask,
   toggleCheckBox,
+  setUserToDos,
+  handlefetchUserTodos,
 }) {
   return userToDos.map((item) => {
     return (
@@ -16,8 +18,9 @@ export default function TodoList({
         <TodoItem
           item={item}
           editTask={editTask}
-          deleteTask={deleteTask}
           toggleCheckBox={toggleCheckBox}
+          setUserToDos={setUserToDos}
+          handlefetchUserTodos={handlefetchUserTodos}
         />
       </div>
     );

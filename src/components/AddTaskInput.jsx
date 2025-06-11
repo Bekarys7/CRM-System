@@ -1,16 +1,10 @@
 import styles from "../components/AddTaskInput.module.scss";
 import { useState } from "react";
-import {
-  SendUserTodos,
-  deleteUserTodos,
-  editUserTodos,
-  fetchUserTodos,
-} from "../api/http";
+import { SendUserTodos } from "../api/http";
 
 export default function AddTaskInput({
   onChange,
   userTodosText,
-  addTodo,
   handlefetchUserTodos,
   setUserTodosText,
 }) {
