@@ -3,7 +3,7 @@ import Tabs from "./components/Tabs";
 import AddTaskInput from "./components/AddTaskInput.jsx";
 import styles from "./App.module.scss";
 import TodoList from "./components/TodoList.jsx";
-import { editUserTodos, fetchUserTodos } from "./api/http.js";
+import { fetchUserTodos } from "./api/http.js";
 
 function App() {
   const [allToDosInfo, setAllToDosInfo] = useState([]);
