@@ -1,0 +1,146 @@
+import { useState } from "react";
+import deleteIcon from "../assets/delete.svg";
+import editIcon from "../assets/editIcon.svg";
+import styles from "../components/TodoItem.module.scss";
+import { deleteUserTodos, editUserTodos } from "../api/http";
+
+export default function TodoItem({
+  userToDos,
+  item,
+  //   setUserToDos,
+  handlefetchUserTodos,
+}) {
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState("");
+  const isEditing = editingId === item.id;
+
+  async function handleDelete(id) {
+    // setUserToDos((prevUserTodos) =>
+    //   prevUserTodos.filter((item) => item.id !== id)
+    // );
+    try {
+      await deleteUserTodos(id);
+      await handlefetchUserTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleEdit(id, newTask) {
+    // setUserToDos((prevTodos) => {
+    //   return prevTodos.map((item) => {
+    //     if (item.id === id) {
+    //       return { ...item, title: newTask };
+    //     }
+    //     return item;
+    //   });
+    // });
+    try {
+      await editUserTodos(id, { title: newTask });
+      await handlefetchUserTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleCheckbox(id) {
+    // const currentTask = userToDos.find((item) => item.id === id);
+    // setUserToDos((prevTodos) =>
+    //   prevTodos.map((item) => {
+    //     return item.id === id ? { ...item, isDone: !item.isDone } : item;
+    //   })
+    // );
+    try {
+      const currentTask = userToDos.find((item) => item.id === id);
+      await editUserTodos(id, { isDone: !currentTask.isDone });
+      await handlefetchUserTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handleStartEdit(id, title) {
+    setEditingId(id);
+    setEditText(title);
+  }
+
+  function handleCancelEdit() {
+    setEditingId(null);
+    setEditText("");
+  }
+
+  function handleSaveEdit(id) {
+    handleEdit(id, editText);
+    handleCancelEdit();
+  }
+
+  return (
+    <div key={item.id}>
+      {isEditing ? (
+        <>
+          <div className={styles.control}>
+            <input
+              type="text"
+              className={styles.inputEdit}
+              onChange={(e) => setEditText(e.target.value)}
+              value={editText}
+              placeholder="Edit task"
+            />
+          </div>
+          <div className={styles.validation}>
+            {editText.trim() === "" ? (
+              <p>Enter the task name</p>
+            ) : editText.length < 2 ? (
+              <p>Minimum of 2 characters</p>
+            ) : editText.length >= 64 ? (
+              <p>Maximum of 64 characters</p>
+            ) : null}
+          </div>
+
+          <div className={styles.buttonControl}>
+            <button
+              onClick={() => handleSaveEdit(item.id)}
+              disabled={
+                editText.trim() === "" ||
+                editText.length < 2 ||
+                editText.length >= 64
+              }
+            >
+              Save
+            </button>
+            <button onClick={handleCancelEdit}>Cancel</button>
+          </div>
+        </>
+      ) : (
+        <div className={styles.control}>
+          <input
+            type="checkbox"
+            checked={item.isDone}
+            onChange={() => handleCheckbox(item.id)}
+          />
+          <p
+            className={`${styles.titleWrapper} ${
+              item.isDone ? styles.completed : undefined
+            }`}
+          >
+            {item.title}
+          </p>
+          <div>
+            <button
+              onClick={() => handleDelete(item.id)}
+              className={styles.editButton}
+            >
+              <img src={deleteIcon} alt="Delete" />
+            </button>
+            <button
+              onClick={() => handleStartEdit(item.id, item.title)}
+              className={styles.deleteButton}
+            >
+              <img src={editIcon} alt="Edit" />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
