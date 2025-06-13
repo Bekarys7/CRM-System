@@ -2,16 +2,16 @@ import { useState } from "react";
 import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/editIcon.svg";
 import styles from "../components/TodoItem.module.scss";
-import { deleteUserTodos, editUserTodos } from "../api/http";
+import { deleteTodos, editTodos } from "../api/http";
 
-export default function TodoItem({ userToDos, item, handlefetchUserTodos }) {
+export default function TodoItem({ toDos, item, handlefetchUserTodos }) {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const isEditing = editingId === item.id;
 
   async function handleDelete(id) {
     try {
-      await deleteUserTodos(id);
+      await deleteTodos(id);
       await handlefetchUserTodos();
     } catch (error) {
       throw new Error("delete error: " + error.message);
@@ -20,7 +20,7 @@ export default function TodoItem({ userToDos, item, handlefetchUserTodos }) {
 
   async function handleEdit(id, newTask) {
     try {
-      await editUserTodos(id, { title: newTask });
+      await editTodos(id, { title: newTask });
       await handlefetchUserTodos();
     } catch (error) {
       console.log(error);
@@ -29,8 +29,8 @@ export default function TodoItem({ userToDos, item, handlefetchUserTodos }) {
 
   async function handleCheckbox(id) {
     try {
-      const currentTask = userToDos.find((item) => item.id === id);
-      await editUserTodos(id, { isDone: !currentTask.isDone });
+      const currentTask = toDos.find((item) => item.id === id);
+      await editTodos(id, { isDone: !currentTask.isDone });
       await handlefetchUserTodos();
     } catch (error) {
       console.log(error);
