@@ -1,4 +1,4 @@
-import styles from "../components/Tabs.module.scss";
+import styles from "../components/FilterTab.module.scss";
 
 export default function Tabs({ children, onChange, isSelected }) {
   return (

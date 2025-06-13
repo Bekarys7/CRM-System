@@ -1,6 +1,6 @@
 import styles from "../components/AddTaskInput.module.scss";
 import { useState } from "react";
-import { SendUserTodos } from "../api/http";
+import { addTodo } from "../api/http";
 
 export default function AddTaskInput({
   onChange,
@@ -14,7 +14,7 @@ export default function AddTaskInput({
   async function handleAddUserTodos() {
     try {
       const newTodo = { isDone: false, title: userTodosText };
-      await SendUserTodos(newTodo);
+      await addTodo(newTodo);
       handlefetchUserTodos();
     } catch (error) {
       console.log(error);

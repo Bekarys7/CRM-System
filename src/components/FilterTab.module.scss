@@ -9,11 +9,11 @@
     transition: background-color 0.7s;
     &:hover {
       color: rgba(42, 132, 235, 0.808);
-      border-bottom: 2px solid;
+      border-bottom: 0.125rem solid;
     }
     &.active {
       color: rgba(42, 132, 235, 0.808);
-      border-bottom: 2px solid;
+      border-bottom: 0.125rem solid;
     }
   }
 }

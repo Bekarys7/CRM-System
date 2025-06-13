@@ -1,4 +1,4 @@
-export async function SendUserTodos(userToDos) {
+export async function addTodo(userToDos) {
   try {
     const response = await fetch("https://easydev.club/api/v1/todos", {
       method: "POST",
@@ -13,19 +13,25 @@ export async function SendUserTodos(userToDos) {
 
     const resData = await response.json();
     return resData;
-  } catch (error) {}
-}
-
-export async function fetchUserTodos() {
-  const response = await fetch("https://easydev.club/api/v1/todos");
-  const resData = await response.json();
-  if (!response.ok) {
-    throw new Error("Error occurred");
+  } catch (error) {
+    console.log(error);
   }
-  return resData;
 }
 
-export async function deleteUserTodos(id) {
+export async function fetchTodos() {
+  try {
+    const response = await fetch("https://easydev.club/api/v1/todos");
+    const resData = await response.json();
+    if (!response.ok) {
+      throw new Error("Error fetch");
+    }
+    return resData;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteTodos(id) {
   try {
     const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
       method: "DELETE",
@@ -34,14 +40,14 @@ export async function deleteUserTodos(id) {
       },
     });
     if (!response.ok) {
-      throw new Error("Error occurred");
+      throw new Error("Error delete");
     }
   } catch (error) {
-    console.log("delete error:", error);
+    alert(error);
   }
 }
 
-export async function editUserTodos(id, task) {
+export async function editTodos(id, task) {
   try {
     const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
       method: "PUT",

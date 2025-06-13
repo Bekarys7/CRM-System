@@ -4,37 +4,21 @@ import editIcon from "../assets/editIcon.svg";
 import styles from "../components/TodoItem.module.scss";
 import { deleteUserTodos, editUserTodos } from "../api/http";
 
-export default function TodoItem({
-  userToDos,
-  item,
-  //   setUserToDos,
-  handlefetchUserTodos,
-}) {
+export default function TodoItem({ userToDos, item, handlefetchUserTodos }) {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const isEditing = editingId === item.id;
 
   async function handleDelete(id) {
-    // setUserToDos((prevUserTodos) =>
-    //   prevUserTodos.filter((item) => item.id !== id)
-    // );
     try {
       await deleteUserTodos(id);
       await handlefetchUserTodos();
     } catch (error) {
-      console.log(error);
+      throw new Error("delete error: " + error.message);
     }
   }
 
   async function handleEdit(id, newTask) {
-    // setUserToDos((prevTodos) => {
-    //   return prevTodos.map((item) => {
-    //     if (item.id === id) {
-    //       return { ...item, title: newTask };
-    //     }
-    //     return item;
-    //   });
-    // });
     try {
       await editUserTodos(id, { title: newTask });
       await handlefetchUserTodos();
@@ -44,12 +28,6 @@ export default function TodoItem({
   }
 
   async function handleCheckbox(id) {
-    // const currentTask = userToDos.find((item) => item.id === id);
-    // setUserToDos((prevTodos) =>
-    //   prevTodos.map((item) => {
-    //     return item.id === id ? { ...item, isDone: !item.isDone } : item;
-    //   })
-    // );
     try {
       const currentTask = userToDos.find((item) => item.id === id);
       await editUserTodos(id, { isDone: !currentTask.isDone });
