@@ -4,22 +4,37 @@ import { addTodo } from "../api/http";
 
 export default function AddTaskInput({
   onChange,
-  userTodosText,
-  handlefetchUserTodos,
-  setUserTodosText,
+  todoText,
+  setTodoText,
+  updateTodos,
 }) {
-  const [onFocusInput, setOnFocusInput] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
-  async function handleAddUserTodos() {
+  async function AddTodo() {
     try {
-      const newTodo = { isDone: false, title: userTodosText };
-      await addTodo(newTodo);
-      handlefetchUserTodos();
+      await addTodo({ isDone: false, title: todoText });
+      await updateTodos();
     } catch (error) {
       console.log(error);
+    } finally {
+      setTodoText("");
     }
-    setUserTodosText("");
+  }
+  function handleOnBlur() {
+    setIsClicked(false);
+    if (!todoText.trim()) {
+      setTodoText("");
+    }
+  }
+
+  function handleAddTodo() {
+    const trimText = todoText.trim();
+    if (trimText === "" || trimText.length < 2 || trimText.length >= 64) {
+      setIsClicked((prev) => (prev ? prev : true));
+    } else {
+      AddTodo();
+      setIsClicked(false);
+    }
   }
 
   return (
@@ -29,47 +44,22 @@ export default function AddTaskInput({
           <input
             type="text"
             onChange={onChange}
-            value={userTodosText}
+            value={todoText}
             placeholder={"Task To Be Done"}
-            onFocus={() => setOnFocusInput(true)}
-            onBlur={() => {
-              setOnFocusInput(false);
-              setIsClicked(false);
-              if (!userTodosText.trim()) {
-                setUserTodosText("");
-              }
-            }}
+            onBlur={handleOnBlur}
             required
           />
         </form>
-        <button
-          onClick={() => {
-            const trimText = userTodosText.trim();
-            if (
-              trimText === "" ||
-              trimText.length < 2 ||
-              trimText.length >= 64
-            ) {
-              setIsClicked((prev) => (prev ? prev : true));
-            } else {
-              handleAddUserTodos();
-              setIsClicked(false);
-            }
-          }}
-        >
-          Add
-        </button>
+        <button onClick={handleAddTodo}>Add</button>
       </div>
       <div
-        className={`${styles.validation} ${
-          onFocusInput || isClicked ? styles.visible : ""
-        }`}
+        className={`${styles.validation} ${isClicked ? styles.visible : ""}`}
       >
-        {(onFocusInput || isClicked) && userTodosText.trim() === "" ? (
+        {isClicked && todoText.trim() === "" ? (
           <p>Enter the task name</p>
-        ) : (onFocusInput || isClicked) && userTodosText.trim().length < 2 ? (
+        ) : isClicked && todoText.trim().length < 2 ? (
           <p>Minimum of 2 characters</p>
-        ) : (onFocusInput || isClicked) && userTodosText.trim().length >= 64 ? (
+        ) : isClicked && todoText.trim().length >= 64 ? (
           <p>Maximum of 64 characters</p>
         ) : null}
       </div>

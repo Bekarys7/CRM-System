@@ -50,15 +50,16 @@ export async function deleteTodos(id) {
   }
 }
 
-export async function editTodos(id, task) {
+export async function editTodos(id, changes) {
   try {
     const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify(task),
+      body: JSON.stringify(changes),
     });
+    console.log(response);
     if (!response.ok) {
       throw new Error("Error occurred");
     }

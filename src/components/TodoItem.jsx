@@ -4,7 +4,7 @@ import editIcon from "../assets/editIcon.svg";
 import styles from "../components/TodoItem.module.scss";
 import { deleteTodos, editTodos } from "../api/http";
 
-export default function TodoItem({ toDos, item, handlefetchUserTodos }) {
+export default function TodoItem({ toDos, item, updateTodos }) {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const isEditing = editingId === item.id;
@@ -12,7 +12,7 @@ export default function TodoItem({ toDos, item, handlefetchUserTodos }) {
   async function handleDelete(id) {
     try {
       await deleteTodos(id);
-      await handlefetchUserTodos();
+      await updateTodos();
     } catch (error) {
       throw new Error("delete error: " + error.message);
     }
@@ -21,17 +21,16 @@ export default function TodoItem({ toDos, item, handlefetchUserTodos }) {
   async function handleEdit(id, newTask) {
     try {
       await editTodos(id, { title: newTask });
-      await handlefetchUserTodos();
+      await updateTodos();
     } catch (error) {
       console.log(error);
     }
   }
 
-  async function handleCheckbox(id) {
+  async function handleCheckbox(id, isDone) {
     try {
-      const currentTask = toDos.find((item) => item.id === id);
-      await editTodos(id, { isDone: !currentTask.isDone });
-      await handlefetchUserTodos();
+      await editTodos(id, { isDone: !isDone });
+      await updateTodos();
     } catch (error) {
       console.log(error);
     }
@@ -94,7 +93,7 @@ export default function TodoItem({ toDos, item, handlefetchUserTodos }) {
           <input
             type="checkbox"
             checked={item.isDone}
-            onChange={() => handleCheckbox(item.id)}
+            onChange={() => handleCheckbox(item.id, item.isDone, item.title)}
           />
           <p
             className={`${styles.titleWrapper} ${
