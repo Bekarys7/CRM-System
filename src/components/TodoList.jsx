@@ -1,14 +1,10 @@
 import TodoItem from "./TodoItem";
 
-export default function TodoList({ userToDos, handlefetchUserTodos }) {
-  return userToDos.map((item) => {
+export default function TodoList({ toDoArray, handlefetchUserTodos }) {
+  return toDoArray.map((item) => {
     return (
       <div key={item.id}>
-        <TodoItem
-          item={item}
-          handlefetchUserTodos={handlefetchUserTodos}
-          userToDos={userToDos}
-        />
+        <TodoItem item={item} handlefetchUserTodos={handlefetchUserTodos} />
       </div>
     );
   });

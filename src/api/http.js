@@ -12,19 +12,22 @@ export async function addTodo(userToDos) {
     }
 
     const resData = await response.json();
+    console.log(resData);
     return resData;
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function fetchTodos() {
+export async function fetchTodos(tab) {
   try {
-    const response = await fetch("https://easydev.club/api/v1/todos");
-    const resData = await response.json();
+    const response = await fetch(
+      `https://easydev.club/api/v1/todos?filter=${tab}`
+    );
     if (!response.ok) {
       throw new Error("Error fetch");
     }
+    const resData = await response.json();
     return resData;
   } catch (error) {
     console.log(error);

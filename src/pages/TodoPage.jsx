@@ -6,15 +6,9 @@ import TodoList from "../components/TodoList.jsx";
 import { fetchTodos } from "../api/http.js";
 
 export default function TodoPage() {
-  const [allToDosInfo, setAllToDosInfo] = useState([]);
-  const [userToDos, setUserToDos] = useState([]);
+  const [toDoData, setToDoData] = useState({});
   const [userTodosText, setUserTodosText] = useState("");
-  const [tab, setTab] = useState("All");
-  const [isLoading, setIsLoading] = useState(false);
-
-  function handleTab(tabName) {
-    setTab((prev) => (prev = tabName));
-  }
+  const [tab, setTab] = useState("inWork");
 
   useEffect(() => {
     handlefetchTodos();
@@ -22,21 +16,16 @@ export default function TodoPage() {
 
   async function handlefetchTodos() {
     try {
-      const ToDoArray = await fetchTodos();
-      setAllToDosInfo(ToDoArray);
-      setIsLoading(true);
-      if (tab === "All") {
-        setUserToDos(ToDoArray.data);
-      } else if (tab === "In work") {
-        setUserToDos(ToDoArray.data.filter((item) => item.isDone === false));
-      } else if (tab === "Completed") {
-        setUserToDos(ToDoArray.data.filter((item) => item.isDone === true));
-      }
+      const toDoArray = await fetchTodos(tab);
+      setToDoData(toDoArray);
     } catch (error) {
       console.log(error);
     }
   }
 
+  function handleTab(tabName) {
+    setTab((prev) => (prev = tabName));
+  }
   return (
     <div className={styles.allWrapper}>
       <AddTaskInput
@@ -49,30 +38,29 @@ export default function TodoPage() {
       <div className={styles.wrapper}>
         <FilterTab
           tab={tab}
-          onChange={() => handleTab("All")}
-          isSelected={tab === "All"}
+          onChange={() => handleTab("all")}
+          isSelected={tab === "all"}
         >
-          All({isLoading ? allToDosInfo.info.all : "..."})
+          All({toDoData.info?.all ?? "..."})
         </FilterTab>
         <FilterTab
           tab={tab}
-          onChange={() => handleTab("In work")}
-          isSelected={tab === "In work"}
+          onChange={() => handleTab("inWork")}
+          isSelected={tab === "inWork"}
         >
-          In work({isLoading ? allToDosInfo.info.inWork : "..."})
+          In work({toDoData.info?.inWork ?? "..."})
         </FilterTab>
         <FilterTab
           tab={tab}
-          onChange={() => handleTab("Completed")}
-          isSelected={tab === "Completed"}
+          onChange={() => handleTab("completed")}
+          isSelected={tab === "completed"}
         >
-          Completed({isLoading ? allToDosInfo.info.completed : "..."})
+          Completed({toDoData.info?.completed ?? "..."})
         </FilterTab>
       </div>
       <TodoList
-        userToDos={userToDos}
+        toDoArray={toDoData.data || []}
         tab={tab}
-        setUserToDos={setUserToDos}
         handlefetchUserTodos={handlefetchTodos}
       />
     </div>
