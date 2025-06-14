@@ -4,7 +4,7 @@ import editIcon from "../assets/editIcon.svg";
 import styles from "../components/TodoItem.module.scss";
 import { deleteTodos, editTodos } from "../api/http";
 
-export default function TodoItem({ toDos, item, updateTodos }) {
+export default function TodoItem({ item, updateTodos, todoText, SetTodoText }) {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const isEditing = editingId === item.id;
