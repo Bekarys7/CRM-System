@@ -2,22 +2,17 @@ import styles from "../components/AddTaskInput.module.scss";
 import { useState } from "react";
 import { addTodo } from "../api/http";
 
-export default function AddTaskInput({
-  onChange,
-  todoText,
-  setTodoText,
-  updateTodos,
-}) {
+export default function AddTaskInput({ updateTodos }) {
   const [isClicked, setIsClicked] = useState(false);
+  const [todoText, setTodoText] = useState("");
 
   async function AddTodo() {
     try {
       await addTodo({ isDone: false, title: todoText });
       await updateTodos();
-    } catch (error) {
-      console.log(error);
-    } finally {
       setTodoText("");
+    } catch (error) {
+      alert(error);
     }
   }
   function handleOnBlur() {
@@ -27,7 +22,8 @@ export default function AddTaskInput({
     }
   }
 
-  function handleAddTodo() {
+  function handleAddTodo(e) {
+    e.preventDefault();
     const trimText = todoText.trim();
     if (trimText === "" || trimText.length < 2 || trimText.length >= 64) {
       setIsClicked((prev) => (prev ? prev : true));
@@ -40,17 +36,17 @@ export default function AddTaskInput({
   return (
     <>
       <div className={styles.wrapper}>
-        <form>
+        <form onSubmit={handleAddTodo}>
           <input
             type="text"
-            onChange={onChange}
+            onChange={(event) => setTodoText(event.target.value)}
             value={todoText}
             placeholder={"Task To Be Done"}
             onBlur={handleOnBlur}
             required
           />
+          <button type="submit">Add</button>
         </form>
-        <button onClick={handleAddTodo}>Add</button>
       </div>
       <div
         className={`${styles.validation} ${isClicked ? styles.visible : ""}`}

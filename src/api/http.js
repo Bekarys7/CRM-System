@@ -15,7 +15,7 @@ export async function addTodo(userToDos) {
     console.log(resData);
     return resData;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
@@ -30,7 +30,7 @@ export async function fetchTodos(tab) {
     const resData = await response.json();
     return resData;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
@@ -46,7 +46,7 @@ export async function deleteTodos(id) {
       throw new Error("Error delete");
     }
   } catch (error) {
-    alert(error);
+    throw error;
   }
 }
 
@@ -64,6 +64,6 @@ export async function editTodos(id, changes) {
       throw new Error("Error occurred");
     }
   } catch (error) {
-    console.log("delete error:", error);
+    throw error;
   }
 }

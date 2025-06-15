@@ -3,61 +3,79 @@ import Tab from "../components/Tab.jsx";
 import AddTaskInput from "../components/AddTaskInput.jsx";
 import styles from "./TodoPage.module.scss";
 import TodoList from "../components/TodoList.jsx";
+import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import { fetchTodos } from "../api/http.js";
 
 export default function TodoPage() {
-  const [toDoData, setToDoData] = useState({});
-  const [todoText, setTodoText] = useState("");
-  const [tabName, setTabName] = useState("inWork");
+  const [todoData, setTodoData] = useState({});
+  const [tabName, setTabName] = useState("all");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   useEffect(() => {
-    getTodos();
+    fetchAndSetTodos();
   }, [tabName]);
 
-  async function getTodos() {
+  async function fetchAndSetTodos() {
+    let spinnerTimeout;
+
     try {
-      const toDoArray = await fetchTodos(tabName);
-      setToDoData(toDoArray);
+      setIsLoading(true);
+
+      spinnerTimeout = setTimeout(() => {
+        setShowSpinner(true);
+      }, 300);
+
+      const todoData = await fetchTodos(tabName);
+      setTodoData(todoData);
     } catch (error) {
-      console.log(error);
+      alert(error);
+    } finally {
+      clearTimeout(spinnerTimeout);
+      setIsLoading(false);
+      setShowSpinner(false);
     }
   }
 
-  function handleTab(tabName) {
-    setTabName((prev) => (prev = tabName));
+  function handleSetTabName(tabName) {
+    setTabName(tabName);
   }
-  return (
-    <div className={styles.allWrapper}>
-      <AddTaskInput
-        todoText={todoText}
-        setTodoText={setTodoText}
-        onChange={(event) => setTodoText(event.target.value)}
-        updateTodos={getTodos}
-      />
 
-      <div className={styles.wrapper}>
-        <Tab onChange={() => handleTab("all")} isSelected={tabName === "all"}>
-          All({toDoData.info?.all ?? "..."})
-        </Tab>
-        <Tab
-          onChange={() => handleTab("inWork")}
-          isSelected={tabName === "inWork"}
-        >
-          In work({toDoData.info?.inWork ?? "..."})
-        </Tab>
-        <Tab
-          onChange={() => handleTab("completed")}
-          isSelected={tabName === "completed"}
-        >
-          Completed({toDoData.info?.completed ?? "..."})
-        </Tab>
+  return (
+    <>
+      <div className={styles.allWrapper}>
+        <AddTaskInput updateTodos={fetchAndSetTodos} />
+
+        <div className={styles.wrapper}>
+          <Tab
+            onChange={() => handleSetTabName("all")}
+            isSelected={tabName === "all"}
+          >
+            All({todoData.info?.all ?? "..."})
+          </Tab>
+          <Tab
+            onChange={() => handleSetTabName("inWork")}
+            isSelected={tabName === "inWork"}
+          >
+            In work({todoData.info?.inWork ?? "..."})
+          </Tab>
+          <Tab
+            onChange={() => handleSetTabName("completed")}
+            isSelected={tabName === "completed"}
+          >
+            Completed({todoData.info?.completed ?? "..."})
+          </Tab>
+        </div>
+
+        {!isLoading && (
+          <TodoList
+            toDoArray={todoData.data || []}
+            updateTodos={fetchAndSetTodos}
+          />
+        )}
       </div>
-      <TodoList
-        toDoArray={toDoData.data || []}
-        updateTodos={getTodos}
-        todoText={todoText}
-        setTodoText={setTodoText}
-      />
-    </div>
+
+      {showSpinner && <LoadingSpinner />}
+    </>
   );
 }
