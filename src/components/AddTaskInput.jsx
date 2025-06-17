@@ -43,7 +43,6 @@ export default function AddTaskInput({ updateTodos }) {
             value={todoText}
             placeholder={"Task To Be Done"}
             onBlur={handleOnBlur}
-            required
           />
           <button type="submit">Add</button>
         </form>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/editIcon.svg";
+import IconButton from "./IconButton";
 import styles from "../components/TodoItem.module.scss";
 import { deleteTodos, editTodos } from "../api/http";
 
@@ -49,10 +50,26 @@ export default function TodoItem({ todo, updateTodos }) {
     return null;
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    setShowValidation(true);
+    if (isInvalidText) return;
+
+    handleSaveEdit(todo.id, editTodoText);
+  }
+
+  function handleEditCancel() {
+    setIsTaskEditing(false);
+  }
+  function handleEditClick() {
+    setEditTodoText(todo.title);
+    setIsTaskEditing(true);
+  }
+
   return (
     <div>
       {isTaskEditing ? (
-        <>
+        <form onSubmit={handleSubmit}>
           <div className={styles.control}>
             <input
               type="text"
@@ -72,22 +89,12 @@ export default function TodoItem({ todo, updateTodos }) {
           )}
 
           <div className={styles.buttonControl}>
-            <button
-              onClick={() => {
-                setShowValidation(true);
-                if (!isInvalidText) {
-                  handleSaveEdit(todo.id, editTodoText);
-                  setEditTodoText("");
-                  setIsTaskEditing(false);
-                  setShowValidation(false);
-                }
-              }}
-            >
-              Save
+            <button type="submit">Save</button>
+            <button type="button" onClick={handleEditCancel}>
+              Cancel
             </button>
-            <button onClick={() => setIsTaskEditing(false)}>Cancel</button>
           </div>
-        </>
+        </form>
       ) : (
         <div className={styles.control}>
           <input
@@ -103,21 +110,12 @@ export default function TodoItem({ todo, updateTodos }) {
             {todo.title}
           </p>
           <div>
-            <button
-              onClick={() => handleDelete(todo.id)}
-              className={styles.editButton}
-            >
+            <IconButton onClick={() => handleDelete(todo.id)} variant="danger">
               <img src={deleteIcon} alt="Delete" />
-            </button>
-            <button
-              onClick={() => {
-                setIsTaskEditing(true);
-                setEditTodoText(todo.title);
-              }}
-              className={styles.deleteButton}
-            >
+            </IconButton>
+            <IconButton onClick={handleEditClick} variant="secondary">
               <img src={editIcon} alt="Edit" />
-            </button>
+            </IconButton>
           </div>
         </div>
       )}
