@@ -84,16 +84,18 @@ export default function TodoItem({ todo, updateTodos }) {
               placeholder="Edit task"
             />
             <div className={styles.buttonControl}>
-              <IconButton type="submit" variant="primary">
-                <img src={acceptIcon} alt="acceptIcon" />
-              </IconButton>
-              <IconButton
-                type="button"
-                onClick={handleEditCancel}
-                variant="danger"
-              >
-                <img src={cancelIcon} alt="cancelIcon" />
-              </IconButton>
+              <div className={styles.iconDiv}>
+                <IconButton type="submit" variant="primary">
+                  <img src={acceptIcon} alt="acceptIcon" />
+                </IconButton>
+                <IconButton
+                  type="button"
+                  onClick={handleEditCancel}
+                  variant="danger"
+                >
+                  <img src={cancelIcon} alt="cancelIcon" />
+                </IconButton>
+              </div>
             </div>
           </div>
           {showValidation && (
@@ -116,7 +118,8 @@ export default function TodoItem({ todo, updateTodos }) {
           >
             {todo.title}
           </p>
-          <div>
+
+          <div className={styles.iconDiv}>
             <IconButton onClick={() => handleDelete(todo.id)} variant="danger">
               <img src={deleteIcon} alt="Delete" />
             </IconButton>
