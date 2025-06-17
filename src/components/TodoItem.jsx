@@ -64,7 +64,7 @@ export default function TodoItem({ todo, updateTodos }) {
     setIsTaskEditing(false);
   }
   function handleEditClick() {
-    setEditTodoText(todo.title);
+    setEditTodoText(todo.title.trim());
     setIsTaskEditing(true);
   }
 
