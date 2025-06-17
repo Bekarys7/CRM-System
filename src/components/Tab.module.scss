@@ -1,18 +1,18 @@
 .wrapper {
   button {
-    background-color: rgb(241, 244, 249);
+    background-color: #f1f4f9;
     font-size: 1.5rem;
-    color: rgb(7, 86, 139);
+    color: #07568b;
     border-style: none;
     cursor: pointer;
 
     transition: background-color 0.7s;
     &:hover {
-      color: rgba(42, 132, 235, 0.808);
+      color: #2a84eb;
       border-bottom: 0.125rem solid;
     }
     &.active {
-      color: rgba(42, 132, 235, 0.808);
+      color: #2a84eb;
       border-bottom: 0.125rem solid;
     }
   }
