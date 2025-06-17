@@ -1,6 +1,8 @@
 import { useState } from "react";
 import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/editIcon.svg";
+import acceptIcon from "../assets/accept.svg";
+import cancelIcon from "../assets/cancel.svg";
 import IconButton from "./IconButton";
 import styles from "../components/TodoItem.module.scss";
 import { deleteTodos, editTodos } from "../api/http";
@@ -81,19 +83,24 @@ export default function TodoItem({ todo, updateTodos }) {
               value={editTodoText}
               placeholder="Edit task"
             />
+            <div className={styles.buttonControl}>
+              <IconButton type="submit" variant="primary">
+                <img src={acceptIcon} alt="acceptIcon" />
+              </IconButton>
+              <IconButton
+                type="button"
+                onClick={handleEditCancel}
+                variant="danger"
+              >
+                <img src={cancelIcon} alt="cancelIcon" />
+              </IconButton>
+            </div>
           </div>
           {showValidation && (
             <div className={styles.validation}>
               {getValidationMessage(editTodoText)}
             </div>
           )}
-
-          <div className={styles.buttonControl}>
-            <button type="submit">Save</button>
-            <button type="button" onClick={handleEditCancel}>
-              Cancel
-            </button>
-          </div>
         </form>
       ) : (
         <div className={styles.control}>
