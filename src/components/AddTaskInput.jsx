@@ -6,7 +6,7 @@ export default function AddTaskInput({ updateTodos }) {
   const [isClicked, setIsClicked] = useState(false);
   const [todoText, setTodoText] = useState("");
 
-  async function AddTodo() {
+  async function addTodoo() {
     try {
       await addTodo({ isDone: false, title: todoText });
       await updateTodos();
@@ -28,7 +28,7 @@ export default function AddTaskInput({ updateTodos }) {
     if (trimText === "" || trimText.length < 2 || trimText.length >= 64) {
       setIsClicked((prev) => (prev ? prev : true));
     } else {
-      AddTodo();
+      addTodoo();
       setIsClicked(false);
     }
   }
