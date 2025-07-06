@@ -1,0 +1,19 @@
+.wrapper {
+  button {
+    background-color: #f1f4f9;
+    font-size: 1.5rem;
+    color: #07568b;
+    border-style: none;
+    cursor: pointer;
+
+    transition: background-color 0.7s;
+    &:hover {
+      color: #2a84eb;
+      border-bottom: 0.125rem solid;
+    }
+    &.active {
+      color: #2a84eb;
+      border-bottom: 0.125rem solid;
+    }
+  }
+}
