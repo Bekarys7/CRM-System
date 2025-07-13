@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/editIcon.svg";
 import acceptIcon from "../assets/accept.svg";
@@ -6,8 +6,14 @@ import cancelIcon from "../assets/cancel.svg";
 import IconButton from "./IconButton";
 import styles from "../components/TodoItem.module.scss";
 import { deleteTodos, editTodos } from "../api/http";
+import type { Todo, UpdateTodos } from "../types/Todo";
 
-export default function TodoItem({ todo, updateTodos }) {
+type TodoItem = {
+  todo: Todo;
+  updateTodos: UpdateTodos;
+};
+
+const TodoItem: FC<TodoItem> = ({ todo, updateTodos }) => {
   const [editTodoText, setEditTodoText] = useState("");
   const [isTaskEditing, setIsTaskEditing] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
@@ -17,7 +23,7 @@ export default function TodoItem({ todo, updateTodos }) {
     editTodoText.length < 2 ||
     editTodoText.length >= 64;
 
-  async function handleDelete(id) {
+  async function handleDelete(id: number) {
     try {
       await deleteTodos(id);
       await updateTodos();
@@ -26,9 +32,9 @@ export default function TodoItem({ todo, updateTodos }) {
     }
   }
 
-  async function handleSaveEdit(id, editTodoText) {
+  async function handleSaveEdit(id: number, editTodoText: { title: string }) {
     try {
-      await editTodos(id, { title: editTodoText });
+      await editTodos(id, editTodoText);
       await updateTodos();
       setEditTodoText("");
     } catch (error) {
@@ -36,7 +42,7 @@ export default function TodoItem({ todo, updateTodos }) {
     }
   }
 
-  async function handleCheckbox(id, isDone) {
+  async function handleCheckbox(id: number, isDone: boolean) {
     try {
       await editTodos(id, { isDone: !isDone });
       await updateTodos();
@@ -45,19 +51,22 @@ export default function TodoItem({ todo, updateTodos }) {
     }
   }
 
-  function getValidationMessage(text) {
+  function getValidationMessage(text: string) {
     if (text.trim() === "") return "Enter the task name";
     if (text.length < 2) return "Minimum of 2 characters";
     if (text.length >= 64) return "Maximum of 64 characters";
     return null;
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setShowValidation(true);
     if (isInvalidText) return;
 
-    handleSaveEdit(todo.id, editTodoText);
+    {
+      if (todo.id === undefined) return;
+    }
+    handleSaveEdit(todo.id, { title: editTodoText });
   }
 
   function handleEditCancel() {
@@ -109,7 +118,7 @@ export default function TodoItem({ todo, updateTodos }) {
           <input
             type="checkbox"
             checked={todo.isDone}
-            onChange={() => handleCheckbox(todo.id, todo.isDone, todo.title)}
+            onChange={() => handleCheckbox(todo.id!, todo.isDone)}
           />
           <p
             className={`${styles.titleWrapper} ${
@@ -120,7 +129,7 @@ export default function TodoItem({ todo, updateTodos }) {
           </p>
 
           <div className={styles.iconDiv}>
-            <IconButton onClick={() => handleDelete(todo.id)} variant="danger">
+            <IconButton onClick={() => handleDelete(todo.id!)} variant="danger">
               <img src={deleteIcon} alt="Delete" />
             </IconButton>
             <IconButton onClick={handleEditClick} variant="secondary">
@@ -131,4 +140,6 @@ export default function TodoItem({ todo, updateTodos }) {
       )}
     </div>
   );
-}
+};
+
+export default TodoItem;

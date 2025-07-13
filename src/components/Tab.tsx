@@ -1,6 +1,12 @@
 import styles from "../components/Tab.module.scss";
 
-export default function Tabs({ children, onChange, isSelected }) {
+type TabsProps = {
+  children: React.ReactNode;
+  onChange: () => void;
+  isSelected: boolean;
+};
+
+const Tabs: React.FC<TabsProps> = ({ children, onChange, isSelected }) => {
   return (
     <>
       <div className={styles.wrapper}>
@@ -13,4 +19,5 @@ export default function Tabs({ children, onChange, isSelected }) {
       </div>
     </>
   );
-}
+};
+export default Tabs;

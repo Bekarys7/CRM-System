@@ -1,6 +1,8 @@
 import TodoItem from "./TodoItem";
+import type { Todo, UpdateTodos } from "../types/Todo";
+type TodoList = { toDoArray: Todo[]; updateTodos: UpdateTodos };
 
-export default function TodoList({ toDoArray, updateTodos }) {
+const TodoList: React.FC<TodoList> = ({ toDoArray, updateTodos }) => {
   return toDoArray.map((todo) => {
     return (
       <div key={todo.id}>
@@ -8,4 +10,5 @@ export default function TodoList({ toDoArray, updateTodos }) {
       </div>
     );
   });
-}
+};
+export default TodoList;

@@ -1,10 +1,13 @@
 import styles from "../components/AddTaskInput.module.scss";
-import { useState } from "react";
+import React, { useState } from "react";
 import { addTodo } from "../api/http";
 
-export default function AddTaskInput({ updateTodos }) {
-  const [isClicked, setIsClicked] = useState(false);
-  const [todoText, setTodoText] = useState("");
+export type UpdateTodos = {
+  updateTodos: () => Promise<void>;
+};
+const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
+  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [todoText, setTodoText] = useState<string>("");
 
   async function addTodoo() {
     try {
@@ -22,7 +25,7 @@ export default function AddTaskInput({ updateTodos }) {
     }
   }
 
-  function handleAddTodo(e) {
+  function handleAddTodo(e: React.FormEvent) {
     e.preventDefault();
     const trimText = todoText.trim();
     if (trimText === "" || trimText.length < 2 || trimText.length >= 64) {
@@ -60,4 +63,6 @@ export default function AddTaskInput({ updateTodos }) {
       </div>
     </>
   );
-}
+};
+
+export default AddTaskInput;

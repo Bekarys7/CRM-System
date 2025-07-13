@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react";
-import Tab from "../components/Tab.jsx";
-import AddTaskInput from "../components/AddTaskInput.jsx";
+import React, { useEffect, useState } from "react";
+import Tab from "../components/Tab.tsx";
+import AddTaskInput from "../components/AddTaskInput.tsx";
 import styles from "./TodoPage.module.scss";
-import TodoList from "../components/TodoList.jsx";
-import LoadingSpinner from "../components/LoadingSpinner.jsx";
-import { fetchTodos } from "../api/http.js";
+import TodoList from "../components/TodoList.tsx";
+import LoadingSpinner from "../components/LoadingSpinner.tsx";
+import { fetchTodos } from "../api/http.ts";
+import type { TodoResponse } from "../types/Todo.ts";
+import type { TabType } from "../types/tab.ts";
 
-export default function TodoPage() {
-  const [todoData, setTodoData] = useState({});
-  const [tabName, setTabName] = useState("all");
-  const [isLoading, setIsLoading] = useState(false);
-  const [showSpinner, setShowSpinner] = useState(false);
+const TodoPage: React.FC = () => {
+  const [todoData, setTodoData] = useState<TodoResponse | null>(null);
+  const [tabName, setTabName] = useState<TabType>("all");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
   useEffect(() => {
     fetchAndSetTodos();
   }, [tabName]);
 
-  async function fetchAndSetTodos() {
-    let spinnerTimeout;
+  async function fetchAndSetTodos(): Promise<void> {
+    let spinnerTimeout: ReturnType<typeof setTimeout> | undefined;
 
     try {
       setIsLoading(true);
@@ -37,7 +39,7 @@ export default function TodoPage() {
     }
   }
 
-  function handleSetTabName(tabName) {
+  function handleSetTabName(tabName: TabType) {
     setTabName(tabName);
   }
 
@@ -51,25 +53,25 @@ export default function TodoPage() {
             onChange={() => handleSetTabName("all")}
             isSelected={tabName === "all"}
           >
-            All({todoData.info?.all ?? "..."})
+            All({todoData?.info?.all ?? "..."})
           </Tab>
           <Tab
             onChange={() => handleSetTabName("inWork")}
             isSelected={tabName === "inWork"}
           >
-            In work({todoData.info?.inWork ?? "..."})
+            In work({todoData?.info?.inWork ?? "..."})
           </Tab>
           <Tab
             onChange={() => handleSetTabName("completed")}
             isSelected={tabName === "completed"}
           >
-            Completed({todoData.info?.completed ?? "..."})
+            Completed({todoData?.info?.completed ?? "..."})
           </Tab>
         </div>
 
         {!isLoading && (
           <TodoList
-            toDoArray={todoData.data || []}
+            toDoArray={todoData?.data || []}
             updateTodos={fetchAndSetTodos}
           />
         )}
@@ -78,4 +80,6 @@ export default function TodoPage() {
       {showSpinner && <LoadingSpinner />}
     </>
   );
-}
+};
+
+export default TodoPage;

@@ -1,8 +1,12 @@
-export async function addTodo(userToDos) {
+import type { TabType } from "../types/tab";
+import type { Todo } from "../types/Todo";
+import type { TodoResponse } from "../types/Todo";
+
+export async function addTodo(ToDos: Todo) {
   try {
     const response = await fetch("https://easydev.club/api/v1/todos", {
       method: "POST",
-      body: JSON.stringify(userToDos),
+      body: JSON.stringify(ToDos),
       headers: {
         "Content-type": "application/json",
       },
@@ -10,16 +14,12 @@ export async function addTodo(userToDos) {
     if (!response.ok) {
       throw new Error("Error occurred");
     }
-
-    const resData = await response.json();
-    console.log(resData);
-    return resData;
   } catch (error) {
     throw error;
   }
 }
 
-export async function fetchTodos(tab) {
+export async function fetchTodos(tab: TabType) {
   try {
     const response = await fetch(
       `https://easydev.club/api/v1/todos?filter=${tab}`
@@ -27,14 +27,15 @@ export async function fetchTodos(tab) {
     if (!response.ok) {
       throw new Error("Error fetch");
     }
-    const resData = await response.json();
+    const resData: TodoResponse = await response.json();
+    console.log(resData);
     return resData;
   } catch (error) {
     throw error;
   }
 }
 
-export async function deleteTodos(id) {
+export async function deleteTodos(id: number) {
   try {
     const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
       method: "DELETE",
@@ -50,7 +51,10 @@ export async function deleteTodos(id) {
   }
 }
 
-export async function editTodos(id, changes) {
+export async function editTodos(
+  id: number,
+  changes: { title?: string; isDone?: boolean }
+) {
   try {
     const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
       method: "PUT",
