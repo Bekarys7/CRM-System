@@ -2,11 +2,11 @@ import type { TabType } from "../types/tab";
 import type { Todo } from "../types/Todo";
 import type { TodoResponse } from "../types/Todo";
 
-export async function addTodo(ToDos: Todo) {
+export async function addTodo(todo: Todo) {
   try {
     const response = await fetch("https://easydev.club/api/v1/todos", {
       method: "POST",
-      body: JSON.stringify(ToDos),
+      body: JSON.stringify(todo),
       headers: {
         "Content-type": "application/json",
       },

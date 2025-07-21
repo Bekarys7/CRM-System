@@ -5,21 +5,23 @@ import { addTodo } from "../api/http";
 export type UpdateTodos = {
   updateTodos: () => Promise<void>;
 };
+
 const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
-  const [isClicked, setIsClicked] = useState<boolean>(false);
   const [todoText, setTodoText] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   async function addTodoo() {
     try {
-      await addTodo({ isDone: false, title: todoText });
+      await addTodo({ isDone: false, title: todoText.trim() });
       await updateTodos();
       setTodoText("");
+      setError("");
     } catch (error) {
       alert(error);
     }
   }
+
   function handleOnBlur() {
-    setIsClicked(false);
     if (!todoText.trim()) {
       setTodoText("");
     }
@@ -28,11 +30,15 @@ const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
   function handleAddTodo(e: React.FormEvent) {
     e.preventDefault();
     const trimText = todoText.trim();
-    if (trimText === "" || trimText.length < 2 || trimText.length >= 64) {
-      setIsClicked((prev) => (prev ? prev : true));
+
+    if (trimText === "") {
+      setError("Enter the task name");
+    } else if (trimText.length < 2) {
+      setError("Minimum of 2 characters");
+    } else if (trimText.length >= 64) {
+      setError("Maximum of 64 characters");
     } else {
       addTodoo();
-      setIsClicked(false);
     }
   }
 
@@ -42,25 +48,22 @@ const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
         <form onSubmit={handleAddTodo}>
           <input
             type="text"
-            onChange={(event) => setTodoText(event.target.value)}
             value={todoText}
-            placeholder={"Task To Be Done"}
+            placeholder="Task To Be Done"
+            onChange={(event) => {
+              setTodoText(event.target.value);
+              setError("");
+            }}
             onBlur={handleOnBlur}
           />
           <button type="submit">Add</button>
         </form>
       </div>
-      <div
-        className={`${styles.validation} ${isClicked ? styles.visible : ""}`}
-      >
-        {isClicked && todoText.trim() === "" ? (
-          <p>Enter the task name</p>
-        ) : isClicked && todoText.trim().length < 2 ? (
-          <p>Minimum of 2 characters</p>
-        ) : isClicked && todoText.trim().length >= 64 ? (
-          <p>Maximum of 64 characters</p>
-        ) : null}
-      </div>
+      {error && (
+        <div className={styles.validation}>
+          <p>{error}</p>
+        </div>
+      )}
     </>
   );
 };
