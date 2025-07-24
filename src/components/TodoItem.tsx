@@ -14,14 +14,9 @@ type TodoItem = {
 };
 
 const TodoItem: FC<TodoItem> = ({ todo, updateTodos }) => {
-  const [editTodoText, setEditTodoText] = useState("");
-  const [isTaskEditing, setIsTaskEditing] = useState(false);
-  const [showValidation, setShowValidation] = useState(false);
-
-  const isInvalidText =
-    editTodoText.trim() === "" ||
-    editTodoText.length < 2 ||
-    editTodoText.length >= 64;
+  const [editTodoText, setEditTodoText] = useState<string>("");
+  const [isTaskEditing, setIsTaskEditing] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   async function handleDelete(id: number) {
     try {
@@ -51,22 +46,19 @@ const TodoItem: FC<TodoItem> = ({ todo, updateTodos }) => {
     }
   }
 
-  function getValidationMessage(text: string) {
-    if (text.trim() === "") return "Enter the task name";
-    if (text.length < 2) return "Minimum of 2 characters";
-    if (text.length >= 64) return "Maximum of 64 characters";
-    return null;
-  }
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setShowValidation(true);
-    if (isInvalidText) return;
+    const trimText = editTodoText;
 
-    {
-      if (todo.id === undefined) return;
+    if (trimText === "") {
+      setError("Enter the task name");
+    } else if (trimText.length < 2) {
+      setError("Minimum of 2 characters");
+    } else if (trimText.length >= 64) {
+      setError("Maximum of 64 characters");
+    } else {
+      handleSaveEdit(todo.id, { title: editTodoText });
     }
-    handleSaveEdit(todo.id, { title: editTodoText });
   }
 
   function handleEditCancel() {
@@ -87,7 +79,6 @@ const TodoItem: FC<TodoItem> = ({ todo, updateTodos }) => {
               className={styles.inputEdit}
               onChange={(e) => {
                 setEditTodoText(e.target.value);
-                setShowValidation(false);
               }}
               value={editTodoText}
               placeholder="Edit task"
@@ -107,9 +98,9 @@ const TodoItem: FC<TodoItem> = ({ todo, updateTodos }) => {
               </div>
             </div>
           </div>
-          {showValidation && (
+          {error && (
             <div className={styles.validation}>
-              {getValidationMessage(editTodoText)}
+              <p>{error}</p>
             </div>
           )}
         </form>

@@ -4,11 +4,7 @@ type TodoList = { toDoArray: Todo[]; updateTodos: UpdateTodos };
 
 const TodoList: React.FC<TodoList> = ({ toDoArray, updateTodos }) => {
   return toDoArray.map((todo) => {
-    return (
-      <div key={todo.id}>
-        <TodoItem todo={todo} updateTodos={updateTodos} />
-      </div>
-    );
+    return <TodoItem key={todo.id} todo={todo} updateTodos={updateTodos} />;
   });
 };
 export default TodoList;

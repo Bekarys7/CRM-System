@@ -1,8 +1,8 @@
 import type { TabType } from "../types/tab";
-import type { Todo } from "../types/Todo";
+import type { CreateTodo } from "../types/Todo";
 import type { TodoResponse } from "../types/Todo";
 
-export async function addTodo(todo: Todo) {
+export async function addTodo(todo: CreateTodo) {
   try {
     const response = await fetch("https://easydev.club/api/v1/todos", {
       method: "POST",

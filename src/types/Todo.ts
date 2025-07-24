@@ -1,8 +1,13 @@
 export type Todo = {
-  id?: number;
-  created?: string;
+  id: number;
+  created: string;
   isDone: boolean;
   title: string;
+};
+
+export type CreateTodo = {
+  title: string;
+  isDone: boolean;
 };
 
 export type Info = {
