@@ -11,7 +11,7 @@ const Tabs: React.FC<TabsProps> = ({ children, onChange, isSelected }) => {
     <>
       <div className={styles.wrapper}>
         <button
-          className={isSelected ? styles.active : undefined}
+          className={(isSelected && styles.active) || undefined}
           onClick={onChange}
         >
           {children}
