@@ -1,6 +1,5 @@
 import type { TabType } from "../types/tab";
-import type { CreateTodo } from "../types/Todo";
-import type { TodoResponse } from "../types/Todo";
+import type { CreateTodo, TodoResponse, Todo, Info } from "../types/Todo";
 
 export async function addTodo(todo: CreateTodo) {
   try {
@@ -27,7 +26,7 @@ export async function fetchTodos(tab: TabType) {
     if (!response.ok) {
       throw new Error("Error fetch");
     }
-    const resData: TodoResponse = await response.json();
+    const resData: TodoResponse<Todo, Info> = await response.json();
     console.log(resData);
     return resData;
   } catch (error) {
