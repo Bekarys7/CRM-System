@@ -1,131 +1,109 @@
 import { useState, type FC } from "react";
 import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/editIcon.svg";
-import acceptIcon from "../assets/accept.svg";
-import cancelIcon from "../assets/cancel.svg";
 import IconButton from "./IconButton";
 import styles from "../components/TodoItem.module.scss";
 import { deleteTodos, editTodos } from "../api/http";
 import type { Todo, UpdateTodos } from "../types/Todo";
+import { Button, Form, Input } from "antd";
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 
-type TodoItem = {
+type TodoItemProps = {
   todo: Todo;
   updateTodos: UpdateTodos;
 };
 
-const TodoItem: FC<TodoItem> = ({ todo, updateTodos }) => {
-  const [editTodoText, setEditTodoText] = useState<string>("");
-  const [isTaskEditing, setIsTaskEditing] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [form] = Form.useForm();
 
-  async function handleDelete(id: number) {
-    try {
-      await deleteTodos(id);
-      await updateTodos();
-    } catch (error) {
-      alert(error);
-    }
-  }
+  const handleDelete = async () => {
+    await deleteTodos(todo.id!);
+    updateTodos();
+  };
 
-  async function handleSaveEdit(id: number, editTodoText: { title: string }) {
-    try {
-      await editTodos(id, editTodoText);
-      await updateTodos();
-      setEditTodoText("");
-    } catch (error) {
-      alert(error);
-    }
-  }
+  const handleCheckbox = async () => {
+    await editTodos(todo.id!, { isDone: !todo.isDone });
+    updateTodos();
+  };
 
-  async function handleCheckbox(id: number, isDone: boolean) {
-    try {
-      await editTodos(id, { isDone: !isDone });
-      await updateTodos();
-    } catch (error) {
-      alert(error);
-    }
-  }
+  const handleEdit = () => {
+    form.setFieldsValue({ title: todo.title.trim() });
+    setIsEditing(true);
+  };
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const trimText = editTodoText;
+  const handleCancel = () => setIsEditing(false);
 
-    if (trimText === "") {
-      setError("Enter the task name");
-    } else if (trimText.length < 2) {
-      setError("Minimum of 2 characters");
-    } else if (trimText.length >= 64) {
-      setError("Maximum of 64 characters");
-    } else {
-      handleSaveEdit(todo.id, { title: editTodoText });
-    }
-  }
-
-  function handleEditCancel() {
-    setIsTaskEditing(false);
-  }
-  function handleEditClick() {
-    setEditTodoText(todo.title.trim());
-    setIsTaskEditing(true);
-  }
+  const handleSubmit = async (values: { title: string }) => {
+    const title = values.title.trim();
+    if (!title) return;
+    await editTodos(todo.id!, { title });
+    await updateTodos();
+    setIsEditing(false);
+  };
 
   return (
     <div>
-      {isTaskEditing ? (
-        <form onSubmit={handleSubmit}>
-          <div className={styles.control}>
-            <input
-              type="text"
-              className={styles.inputEdit}
-              onChange={(e) => {
-                setEditTodoText(e.target.value);
-              }}
-              value={editTodoText}
-              placeholder="Edit task"
+      {isEditing ? (
+        <Form form={form} className={styles.control} onFinish={handleSubmit}>
+          <Form.Item
+            validateTrigger="onSubmit"
+            name="title"
+            rules={[
+              { required: true, message: "Please input your task!" },
+              { min: 2, message: "Minimum of 2 characters" },
+              { max: 64, message: "Maximum of 64 characters" },
+            ]}
+          >
+            <Input placeholder="Edit task" className={styles.inputEdit} />
+          </Form.Item>
+
+          <div className={styles.buttonControl}>
+            <Button
+              color="green"
+              variant="solid"
+              icon={<CheckOutlined />}
+              htmlType="submit"
             />
-            <div className={styles.buttonControl}>
-              <div className={styles.iconDiv}>
-                <IconButton type="submit" variant="primary">
-                  <img src={acceptIcon} alt="acceptIcon" />
-                </IconButton>
-                <IconButton
-                  type="button"
-                  onClick={handleEditCancel}
-                  variant="danger"
-                >
-                  <img src={cancelIcon} alt="cancelIcon" />
-                </IconButton>
-              </div>
-            </div>
+            <Button
+              type="primary"
+              danger
+              icon={<CloseOutlined />}
+              onClick={handleCancel}
+            />
           </div>
-          {error && (
-            <div className={styles.validation}>
-              <p>{error}</p>
-            </div>
-          )}
-        </form>
+        </Form>
       ) : (
         <div className={styles.control}>
           <input
             type="checkbox"
             checked={todo.isDone}
-            onChange={() => handleCheckbox(todo.id!, todo.isDone)}
+            onChange={handleCheckbox}
           />
           <p
             className={`${styles.titleWrapper} ${
-              todo.isDone ? styles.completed : undefined
+              todo.isDone ? styles.completed : ""
             }`}
           >
             {todo.title}
           </p>
-
-          <div className={styles.iconDiv}>
-            <IconButton onClick={() => handleDelete(todo.id!)} variant="danger">
-              <img src={deleteIcon} alt="Delete" />
-            </IconButton>
-            <IconButton onClick={handleEditClick} variant="secondary">
-              <img src={editIcon} alt="Edit" />
-            </IconButton>
+          <div className={styles.buttonControl}>
+            <Button
+              type="primary"
+              onClick={handleDelete}
+              danger
+              icon={<DeleteOutlined />}
+            ></Button>
+            <Button
+              onClick={handleEdit}
+              type="primary"
+              icon={<EditOutlined />}
+            ></Button>
           </div>
         </div>
       )}

@@ -1,10 +1,10 @@
 .wrapper {
-  margin: 2rem 5rem;
+  margin: 1rem 0rem 0rem 0rem;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  input {
+  .taskInput {
     font-size: 1.25rem;
     width: 40rem;
     border: 1px solid;
@@ -19,19 +19,13 @@
     }
   }
 
-  button {
-    cursor: pointer;
+  .addTaskButton {
     font-size: 1.25rem;
     margin: 0 0.5rem;
-    padding: 0.5rem 2rem;
-    background-color: #2a84eb;
     border-radius: 5px;
     border-style: none;
     color: white;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    &:hover {
-      background-color: #2a84eb;
-    }
   }
 }
 .validation {
@@ -42,4 +36,10 @@
   margin-left: 6rem;
   margin-top: -3rem;
   text-shadow: 1px 1px 2px pink;
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  &.visible {
+    opacity: 1;
+  }
 }

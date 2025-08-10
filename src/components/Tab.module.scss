@@ -1,5 +1,5 @@
 .wrapper {
-  button {
+  .btnNoBg {
     background-color: #f1f4f9;
     font-size: 1.5rem;
     color: #07568b;
@@ -7,13 +7,17 @@
     cursor: pointer;
 
     transition: background-color 0.7s;
-    &:hover {
+    &.btnNoBg:hover {
       color: #2a84eb;
       border-bottom: 0.125rem solid;
+      background: none;
+      border-radius: 0px;
     }
-    &.active {
+    &.btnNoBg.active {
       color: #2a84eb;
       border-bottom: 0.125rem solid;
+      background: none;
+      border-radius: 0px;
     }
   }
 }

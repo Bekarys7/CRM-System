@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import styles from "../components/Tab.module.scss";
 
 type TabsProps = {
@@ -10,12 +11,13 @@ const Tabs: React.FC<TabsProps> = ({ children, onChange, isSelected }) => {
   return (
     <>
       <div className={styles.wrapper}>
-        <button
-          className={(isSelected && styles.active) || undefined}
+        <Button
+          type="text"
           onClick={onChange}
+          className={`${styles.btnNoBg} ${isSelected ? styles.active : ""}`}
         >
           {children}
-        </button>
+        </Button>
       </div>
     </>
   );

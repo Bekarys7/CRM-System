@@ -1,5 +1,6 @@
 import styles from "../components/AddTaskInput.module.scss";
-import React, { useState } from "react";
+import React from "react";
+import { Button, Form, Input } from "antd";
 import { addTodo } from "../api/http";
 
 export type UpdateTodos = {
@@ -7,63 +8,74 @@ export type UpdateTodos = {
 };
 
 const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
-  const [todoText, setTodoText] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [form] = Form.useForm();
 
-  async function addTodoo() {
+  type TodoFormValues = {
+    title: string;
+  };
+
+  const onFinish = async (values: TodoFormValues) => {
+    const title = values.title.trim();
     try {
-      await addTodo({ isDone: false, title: todoText.trim() });
+      await addTodo({ isDone: false, title });
       await updateTodos();
-      setTodoText("");
-      setError("");
+      form.resetFields();
     } catch (error) {
-      alert(error);
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Unknown error");
+      }
     }
-  }
+  };
 
-  function handleOnBlur() {
-    if (!todoText.trim()) {
-      setTodoText("");
-    }
-  }
-
-  function handleAddTodo(e: React.FormEvent) {
-    e.preventDefault();
-    const trimText = todoText.trim();
-
-    if (trimText === "") {
-      setError("Enter the task name");
-    } else if (trimText.length < 2) {
-      setError("Minimum of 2 characters");
-    } else if (trimText.length >= 64) {
-      setError("Maximum of 64 characters");
+  const onReset = (e: React.FocusEvent<HTMLInputElement>) => {
+    const cleaned = e.target.value.trim();
+    if (cleaned) {
+      form.setFieldValue("title", cleaned);
     } else {
-      addTodoo();
+      form.resetFields();
     }
-  }
+  };
 
   return (
     <>
       <div className={styles.wrapper}>
-        <form onSubmit={handleAddTodo}>
-          <input
-            type="text"
-            value={todoText}
-            placeholder="Task To Be Done"
-            onChange={(event) => {
-              setTodoText(event.target.value);
-              setError("");
-            }}
-            onBlur={handleOnBlur}
-          />
-          <button type="submit">Add</button>
-        </form>
+        <Form
+          form={form}
+          name="todo"
+          onFinish={onFinish}
+          autoComplete="off"
+          className={styles.wrapper}
+        >
+          <Form.Item
+            validateTrigger="onSubmit"
+            name="title"
+            label={null}
+            rules={[
+              { required: true, message: "Please input your username!" },
+              { min: 2, message: "Minimum of 2 characters" },
+              { max: 64, message: "Maximum of 64 charecters" },
+            ]}
+          >
+            <Input
+              onBlur={onReset}
+              placeholder="Input your task"
+              className={styles.taskInput}
+            />
+          </Form.Item>
+
+          <Form.Item label={null}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className={styles.addTaskButton}
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
-      {error && (
-        <div className={styles.validation}>
-          <p>{error}</p>
-        </div>
-      )}
     </>
   );
 };
