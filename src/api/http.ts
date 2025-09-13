@@ -1,18 +1,10 @@
 import type { TabType } from "../types/tab";
 import type { CreateTodo, TodoResponse, Todo, Info } from "../types/Todo";
+import axios from "axios";
 
 export async function addTodo(todo: CreateTodo) {
   try {
-    const response = await fetch("https://easydev.club/api/v1/todos", {
-      method: "POST",
-      body: JSON.stringify(todo),
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Error occurred");
-    }
+    await axios.post("https://easydev.club/api/v1/todos", todo);
   } catch (error) {
     throw error;
   }
@@ -20,15 +12,12 @@ export async function addTodo(todo: CreateTodo) {
 
 export async function fetchTodos(tab: TabType) {
   try {
-    const response = await fetch(
-      `https://easydev.club/api/v1/todos?filter=${tab}`
+    const response = await axios.get<TodoResponse<Todo, Info>>(
+      `https://easydev.club/api/v1/todos`,
+      { params: { filter: tab } }
     );
-    if (!response.ok) {
-      throw new Error("Error fetch");
-    }
-    const resData: TodoResponse<Todo, Info> = await response.json();
-    console.log(resData);
-    return resData;
+    console.log(response.data);
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -36,15 +25,7 @@ export async function fetchTodos(tab: TabType) {
 
 export async function deleteTodos(id: number) {
   try {
-    const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Error delete");
-    }
+    await axios.delete(`https://easydev.club/api/v1/todos/${id}`);
   } catch (error) {
     throw error;
   }
@@ -55,17 +36,7 @@ export async function editTodos(
   changes: { title?: string; isDone?: boolean }
 ) {
   try {
-    const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(changes),
-    });
-    console.log(response);
-    if (!response.ok) {
-      throw new Error("Error occurred");
-    }
+    await axios.put(`https://easydev.club/api/v1/todos/${id}`, changes);
   } catch (error) {
     throw error;
   }

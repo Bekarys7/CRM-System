@@ -20,9 +20,9 @@ export type Meta = {
   totalAmount: number;
 };
 
-export type TodoResponse = {
-  data: Todo[];
-  info: Info;
+export type TodoResponse<T, N> = {
+  data: T[]; 
+  info: N;
   meta: Meta;
 };
 
