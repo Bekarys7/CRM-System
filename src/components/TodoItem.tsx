@@ -1,8 +1,6 @@
-import { type FC } from "react";
+import { useState, type FC } from "react";
 import styles from "../components/TodoItem.module.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { uiTodoActions } from "../store/uiTodo-slice";
-import type { RootState } from "../store/store";
+
 import { deleteTodos, editTodos } from "../api/http";
 import type { Todo, UpdateTodos } from "../types/Todo";
 import { Button, Form, Input } from "antd";
@@ -21,11 +19,7 @@ type TodoItemProps = {
 const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
   const [form] = Form.useForm();
 
-  const dispatch = useDispatch();
-  const editingTodoId = useSelector(
-    (state: RootState) => state.ui.editingTodoId
-  );
-  const isEditing = editingTodoId === todo.id;
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleDelete = async () => {
     await deleteTodos(todo.id!);
@@ -39,17 +33,17 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
 
   const handleEdit = () => {
     form.setFieldsValue({ title: todo.title.trim() });
-    dispatch(uiTodoActions.startEditingTodo(todo.id));
+    setIsEditing(true);
   };
 
-  const handleCancel = () => dispatch(uiTodoActions.stopEditingTodo());
+  const handleCancel = () => setIsEditing(false);
 
   const handleSubmit = async (values: { title: string }) => {
     const title = values.title.trim();
     if (!title) return;
     await editTodos(todo.id!, { title });
     await updateTodos();
-    dispatch(uiTodoActions.stopEditingTodo());
+    setIsEditing(false);
   };
 
   return (
