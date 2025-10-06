@@ -17,7 +17,9 @@ const TodoPage: React.FC = () => {
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchAndSetTodos();
+    setInterval(() => {
+      fetchAndSetTodos();
+    }, 5000);
   }, [tabName]);
 
   async function fetchAndSetTodos(): Promise<void> {
