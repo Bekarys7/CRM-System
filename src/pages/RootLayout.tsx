@@ -13,7 +13,7 @@ function RootLayout() {
           width: "100%",
         }}
       >
-        <Sider style={{ backgroundColor: "#F1F4F9", marginBottom: "51rem" }}>
+        <Sider style={{ backgroundColor: "#F5F5F5", marginBottom: "51rem" }}>
           <SideMenu />
         </Sider>
 

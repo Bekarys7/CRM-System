@@ -13,21 +13,23 @@ const TodoPage: React.FC = () => {
     null
   );
   const [tabName, setTabName] = useState<TabType>("all");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
   useEffect(() => {
-    setInterval(() => {
+    fetchAndSetTodos();
+  }, [tabName]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
       fetchAndSetTodos();
     }, 5000);
+    return () => clearInterval(interval);
   }, [tabName]);
 
   async function fetchAndSetTodos(): Promise<void> {
     let spinnerTimeout: ReturnType<typeof setTimeout> | undefined;
 
     try {
-      setIsLoading(true);
-
       spinnerTimeout = setTimeout(() => {
         setShowSpinner(true);
       }, 300);
@@ -38,7 +40,6 @@ const TodoPage: React.FC = () => {
       alert(error);
     } finally {
       clearTimeout(spinnerTimeout);
-      setIsLoading(false);
       setShowSpinner(false);
     }
   }
@@ -73,12 +74,12 @@ const TodoPage: React.FC = () => {
           </Tab>
         </div>
 
-        {!isLoading && (
+        {
           <TodoList
             toDoArray={todoData?.data || []}
             updateTodos={fetchAndSetTodos}
           />
-        )}
+        }
       </div>
 
       {showSpinner && <LoadingSpinner />}

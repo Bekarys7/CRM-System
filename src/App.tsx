@@ -1,4 +1,4 @@
-import ProfilePage from "./pages/profilePage";
+import ProfilePage from "./pages/ProfilePage";
 import RootLayout from "./pages/RootLayout";
 import TodoPage from "./pages/TodoPage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";

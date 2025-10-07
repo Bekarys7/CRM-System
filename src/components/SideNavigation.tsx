@@ -34,7 +34,7 @@ const Sidemenu: React.FC = () => {
   return (
     <Menu
       onClick={onClick}
-      style={{ backgroundColor: "#F1F4F9", border: "none" }}
+      style={{ backgroundColor: "#F5F5F5", border: "none" }}
       mode="inline"
       items={items}
       className={styles.menu}
