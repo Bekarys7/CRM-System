@@ -2,7 +2,7 @@ import { useState, type FC } from "react";
 import styles from "../components/TodoItem.module.scss";
 
 import { deleteTodos, editTodos } from "../api/http";
-import type { Todo, UpdateTodos } from "../types/Todo";
+import type { Todo, UpdateTodos } from "../types/Todo.types";
 import { Button, Form, Input } from "antd";
 import {
   CheckOutlined,

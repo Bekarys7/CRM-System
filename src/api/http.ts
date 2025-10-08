@@ -1,5 +1,5 @@
-import type { TabType } from "../types/tab";
-import type { CreateTodo, TodoResponse, Todo, Info } from "../types/Todo";
+import type { TabType } from "../types/Tab.types";
+import type { CreateTodo, TodoResponse, Todo, Info } from "../types/Todo.types";
 import { api } from "./axios";
 
 export async function addTodo(todo: CreateTodo) {

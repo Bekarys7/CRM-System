@@ -5,8 +5,8 @@ import styles from "./TodoPage.module.scss";
 import TodoList from "../components/TodoList.tsx";
 import LoadingSpinner from "../components/LoadingSpinner.tsx";
 import { fetchTodos } from "../api/http.ts";
-import type { TodoResponse, Info, Todo } from "../types/Todo.ts";
-import type { TabType } from "../types/tab.ts";
+import type { TodoResponse, Info, Todo } from "../types/Todo.types.ts";
+import type { TabType } from "../types/Tab.types.ts";
 
 const TodoPage: React.FC = () => {
   const [todoData, setTodoData] = useState<TodoResponse<Todo, Info> | null>(

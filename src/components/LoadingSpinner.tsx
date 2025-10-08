@@ -1,9 +1,21 @@
-import styles from "../components/LoadingSpinner.module.scss";
+import React from "react";
+import { ConfigProvider, Spin } from "antd";
+import styles from "./LoadingSpinner.module.scss";
 
-export default function LoadingSpinner() {
-  return (
-    <div className={styles.wrapper}>
-      <div className={styles.loadingSpinner} />{" "}
-    </div>
-  );
-}
+const LoadingSpinner: React.FC = () => (
+  <div className={styles.wrapper}>
+    <ConfigProvider
+      theme={{
+        components: {
+          Spin: {
+            dotSizeLG: 80,
+          },
+        },
+      }}
+    >
+      <Spin size="large"></Spin>
+    </ConfigProvider>
+  </div>
+);
+
+export default LoadingSpinner;
