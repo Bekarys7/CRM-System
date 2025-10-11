@@ -27,14 +27,9 @@ const items: MenuItem[] = [
 ];
 
 const Sidemenu: React.FC = () => {
-  const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
-  };
-
   return (
     <Menu
       defaultSelectedKeys={["/"]}
-      onClick={onClick}
       style={{ backgroundColor: "#F5F5F5", border: "none" }}
       mode="inline"
       items={items}

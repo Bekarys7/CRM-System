@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Tab from "../components/Tab.tsx";
 import AddTaskInput from "../components/AddTaskInput.tsx";
 import styles from "./TodoPage.module.scss";
@@ -15,18 +15,7 @@ const TodoPage: React.FC = () => {
   const [tabName, setTabName] = useState<TabType>("all");
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
-  useEffect(() => {
-    fetchAndSetTodos();
-  }, [tabName]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchAndSetTodos();
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [tabName]);
-
-  async function fetchAndSetTodos(): Promise<void> {
+  const fetchAndSetTodos = useCallback(async (): Promise<void> => {
     let spinnerTimeout: ReturnType<typeof setTimeout> | undefined;
 
     try {
@@ -34,19 +23,35 @@ const TodoPage: React.FC = () => {
         setShowSpinner(true);
       }, 300);
 
-      const todoData = await fetchTodos(tabName);
-      setTodoData(todoData);
+      const newData = await fetchTodos(tabName);
+      setTodoData((currentData) => {
+        if (JSON.stringify(currentData) === JSON.stringify(newData)) {
+          return currentData;
+        }
+        return newData;
+      });
     } catch (error) {
       alert(error);
     } finally {
       clearTimeout(spinnerTimeout);
       setShowSpinner(false);
     }
-  }
+  }, [tabName]);
 
-  function handleSetTabName(tabName: TabType) {
+  useEffect(() => {
+    fetchAndSetTodos();
+  }, [fetchAndSetTodos]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchAndSetTodos();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [fetchAndSetTodos]);
+
+  const handleSetTabName = useCallback((tabName: TabType) => {
     setTabName(tabName);
-  }
+  }, []);
 
   return (
     <>

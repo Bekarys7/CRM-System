@@ -1,3 +1,4 @@
+// import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 import RootLayout from "./pages/RootLayout";
 import TodoPage from "./pages/TodoPage";
@@ -10,6 +11,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <TodoPage /> },
       { path: "profile", element: <ProfilePage /> },
+      // { index: true, element: <AuthPage /> },
     ],
   },
 ]);

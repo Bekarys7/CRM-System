@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import React, { useState, type FC } from "react";
 import styles from "../components/TodoItem.module.scss";
 
 import { deleteTodos, editTodos } from "../api/http";
@@ -46,6 +46,7 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
     setIsEditing(false);
   };
 
+  console.log("pererender");
   return (
     <div>
       {isEditing ? (
@@ -110,4 +111,4 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
   );
 };
 
-export default TodoItem;
+export default React.memo(TodoItem);
