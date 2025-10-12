@@ -3,6 +3,7 @@ import { Button, Card, Flex, Typography } from "antd";
 
 const cardStyle: React.CSSProperties = {
   width: 620,
+  margin: "0 auto",
 };
 
 const imgStyle: React.CSSProperties = {
@@ -11,33 +12,36 @@ const imgStyle: React.CSSProperties = {
 };
 
 const AuthPage: React.FC = () => (
-  <Card
-    hoverable
-    style={cardStyle}
-    styles={{ body: { padding: 0, overflow: "hidden" } }}
-  >
-    <Flex justify="space-between">
-      <img
-        draggable={false}
-        alt="avatar"
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        style={imgStyle}
-      />
-      <Flex
-        vertical
-        align="flex-end"
-        justify="space-between"
-        style={{ padding: 32 }}
-      >
-        <Typography.Title level={3}>
-          “antd is an enterprise-class UI design language and React UI library.”
-        </Typography.Title>
-        <Button type="primary" href="https://ant.design" target="_blank">
-          Get Started
-        </Button>
+  <div style={{ display: "flex", alignItems: "center", minHeight: "100wh" }}>
+    <Card
+      hoverable
+      style={cardStyle}
+      styles={{ body: { padding: 0, overflow: "hidden" } }}
+    >
+      <Flex justify="center">
+        <img
+          draggable={false}
+          alt="avatar"
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          style={imgStyle}
+        />
+        <Flex
+          vertical
+          align="flex-end"
+          justify="space-between"
+          style={{ padding: 32 }}
+        >
+          <Typography.Title level={3}>
+            “antd is an enterprise-class UI design language and React UI
+            library.”
+          </Typography.Title>
+          <Button type="primary" href="https://ant.design" target="_blank">
+            Get Started
+          </Button>
+        </Flex>
       </Flex>
-    </Flex>
-  </Card>
+    </Card>
+  </div>
 );
 
 export default AuthPage;

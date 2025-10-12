@@ -17,7 +17,7 @@ function RootLayout() {
           <SideMenu />
         </Sider>
 
-        <Layout style={{}}>
+        <Layout>
           <Content>
             <Outlet />
           </Content>
