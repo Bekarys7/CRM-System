@@ -4,4 +4,5 @@ body {
   font-size: 1.25rem;
   background-color: rgb(241, 244, 249);
   font-family: sans-serif;
+  min-height: 100vh;
 }
