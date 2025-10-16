@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, Col, Row, Typography, Form, Input } from "antd";
+import { Button, Card, Col, Row, Typography } from "antd";
 import authBackground from "../../assets/authBackground.svg";
 import styles from "./AuthCard.module.scss";
 

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import type { TabType } from "../../types/Tab.types";
@@ -23,16 +23,19 @@ const TodoTabs: React.FC<TodoTabsProps> = ({ setTabName }) => {
     },
   ];
 
-  const handleTabChange = useCallback(
-    (key: string) => {
-      setTabName(key as TabType);
-      console.log(key as TabType);
-    },
-    [setTabName]
-  );
+  const handleTabChange = (key: string) => {
+    setTabName(key as TabType);
+  };
+
+  console.log("TodoTabs");
 
   return (
-    <Tabs defaultActiveKey="1" items={items} onTabClick={handleTabChange} />
+    <Tabs
+      defaultActiveKey="1"
+      items={items}
+      onTabClick={handleTabChange}
+      style={{ margin: "0 auto" }}
+    />
   );
 };
-export default React.memo(TodoTabs);
+export default TodoTabs;

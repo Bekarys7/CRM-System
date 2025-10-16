@@ -8,6 +8,8 @@ const TodoList: React.FC<TodoList> = ({ toDoArray, updateTodos }) => {
     return [...toDoArray].reverse();
   }, [toDoArray]);
 
+  console.log("TodoList");
+
   return reversedToDoArray.map((todo) => {
     return <TodoItem key={todo.id} todo={todo} updateTodos={updateTodos} />;
   });

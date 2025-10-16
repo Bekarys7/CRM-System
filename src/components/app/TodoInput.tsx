@@ -1,5 +1,5 @@
 import styles from "../app/TodoInput.module.scss";
-import React from "react";
+import React, { memo } from "react";
 import { Button, Form, Input } from "antd";
 import { addTodo } from "../../api/http";
 
@@ -38,6 +38,7 @@ const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
     }
   };
 
+  console.log("TodoInput");
   return (
     <>
       <div className={styles.wrapper}>
@@ -80,4 +81,4 @@ const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
   );
 };
 
-export default AddTaskInput;
+export default memo(AddTaskInput);

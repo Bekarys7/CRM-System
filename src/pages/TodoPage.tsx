@@ -9,37 +9,44 @@ import type { TodoResponse, Info, Todo } from "../types/Todo.types.ts";
 import type { TabType } from "../types/Tab.types.ts";
 
 const TodoPage: React.FC = () => {
-  const [todoData, setTodoData] = useState<TodoResponse<Todo, Info> | null>(
-    null
-  );
+  const [todoData, setTodoData] = useState<TodoResponse<Todo, Info>>();
   const [tabName, setTabName] = useState<TabType>("all");
-  const [showSpinner, setShowSpinner] = useState<boolean>(false);
+  const [showSpinner, setShowSpinner] = useState<boolean>(true);
+
+  console.log("TodoPage");
+
+  const handleTabChange = (newTabName: TabType) => {
+    if (newTabName !== tabName) {
+      setTabName(newTabName);
+      setShowSpinner(true);
+    }
+  };
 
   const fetchAndSetTodos = useCallback(async (): Promise<void> => {
     let spinnerTimeout: ReturnType<typeof setTimeout> | undefined;
 
     try {
-      spinnerTimeout = setTimeout(() => {
-        setShowSpinner(true);
-      }, 300);
-
       const newData = await fetchTodos(tabName);
-      setTodoData((currentData) => {
-        if (JSON.stringify(currentData) === JSON.stringify(newData)) {
-          return currentData;
+      setTodoData((prevTodoData) => {
+        if (JSON.stringify(prevTodoData) === JSON.stringify(newData)) {
+          return prevTodoData;
+        } else {
+          return newData;
         }
-        return newData;
       });
     } catch (error) {
       alert(error);
     } finally {
       clearTimeout(spinnerTimeout);
-      setShowSpinner(false);
     }
   }, [tabName]);
 
   useEffect(() => {
-    fetchAndSetTodos();
+    const loadData = async () => {
+      await fetchAndSetTodos();
+      setShowSpinner(false);
+    };
+    loadData();
     const interval = setInterval(() => {
       fetchAndSetTodos();
     }, 5000);
@@ -52,18 +59,18 @@ const TodoPage: React.FC = () => {
         <TodoInput updateTodos={fetchAndSetTodos} />
 
         <div className={styles.wrapper}>
-          <TodoTabs setTabName={setTabName} />
+          <TodoTabs setTabName={handleTabChange} />
         </div>
 
-        {
+        {showSpinner ? (
+          <LoadingSpinner />
+        ) : (
           <TodoList
             toDoArray={todoData?.data || []}
             updateTodos={fetchAndSetTodos}
           />
-        }
+        )}
       </div>
-
-      {showSpinner && <LoadingSpinner />}
     </>
   );
 };

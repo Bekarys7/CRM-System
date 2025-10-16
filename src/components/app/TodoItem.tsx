@@ -1,9 +1,10 @@
-import React, { useState, type FC } from "react";
+import React, { useCallback, useState, type FC } from "react";
 import styles from "../app/TodoItem.module.scss";
 
 import { deleteTodos, editTodos } from "../../api/http";
 import type { Todo, UpdateTodos } from "../../types/Todo.types";
-import { Button, Form, Input } from "antd";
+import type { CheckboxProps } from "antd";
+import { Button, Form, Input, Checkbox, Space } from "antd";
 import {
   CheckOutlined,
   CloseOutlined,
@@ -21,32 +22,35 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     await deleteTodos(todo.id!);
     updateTodos();
-  };
+  }, [todo.id, updateTodos]);
 
-  const handleCheckbox = async () => {
+  const handleCheckbox: CheckboxProps["onChange"] = useCallback(async () => {
     await editTodos(todo.id!, { isDone: !todo.isDone });
     updateTodos();
-  };
+  }, [todo.id, todo.isDone, updateTodos]);
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     form.setFieldsValue({ title: todo.title.trim() });
     setIsEditing(true);
-  };
+  }, [todo.title, form]);
 
-  const handleCancel = () => setIsEditing(false);
+  const handleCancel = useCallback(() => setIsEditing(false), []);
 
-  const handleSubmit = async (values: { title: string }) => {
-    const title = values.title.trim();
-    if (!title) return;
-    await editTodos(todo.id!, { title });
-    await updateTodos();
-    setIsEditing(false);
-  };
+  const handleSubmit = useCallback(
+    async (values: { title: string }) => {
+      const title = values.title.trim();
+      if (!title) return;
+      await editTodos(todo.id!, { title });
+      await updateTodos();
+      setIsEditing(false);
+    },
+    [todo.id, updateTodos]
+  );
 
-  console.log("pererender");
+  console.log("TodoItem");
   return (
     <div>
       {isEditing ? (
@@ -80,18 +84,20 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
         </Form>
       ) : (
         <div className={styles.control}>
-          <input
-            type="checkbox"
-            checked={todo.isDone}
-            onChange={handleCheckbox}
-          />
-          <p
-            className={`${styles.titleWrapper} ${
-              todo.isDone ? styles.completed : ""
-            }`}
-          >
-            {todo.title}
-          </p>
+          <Space size="small">
+            <Checkbox
+              onChange={handleCheckbox}
+              checked={todo.isDone}
+            ></Checkbox>
+
+            <p
+              className={`${styles.titleWrapper} ${
+                todo.isDone ? styles.completed : ""
+              }`}
+            >
+              {todo.title}
+            </p>
+          </Space>
           <div className={styles.buttonControl}>
             <Button
               type="primary"
