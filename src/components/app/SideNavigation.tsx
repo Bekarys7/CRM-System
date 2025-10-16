@@ -22,11 +22,11 @@ const items: MenuItem[] = [
         icon: <UserOutlined />,
         label: <Link to="/profile">Profile</Link>,
       },
-      {
-        key: "/auth",
-        icon: <UserOutlined />,
-        label: <Link to="/auth">Auth</Link>,
-      },
+      // {
+      //   key: "/auth",
+      //   icon: <UserOutlined />,
+      //   label: <Link to="/auth">Auth</Link>,
+      // },
     ],
   },
 ];
