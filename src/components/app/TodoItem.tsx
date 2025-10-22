@@ -17,10 +17,14 @@ type TodoItemProps = {
   updateTodos: UpdateTodos;
 };
 
-const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
-  const [form] = Form.useForm();
+type EditFormValues = {
+  title: string;
+};
 
-  const [isEditing, setIsEditing] = useState(false);
+const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
+  const [form] = Form.useForm<EditFormValues>();
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const handleDelete = useCallback(async () => {
     await deleteTodos(todo.id!);

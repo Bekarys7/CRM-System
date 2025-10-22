@@ -7,14 +7,14 @@ export type UpdateTodos = {
   updateTodos: () => Promise<void>;
 };
 
+type TodoFormValues = {
+  title: string;
+};
+
 const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<TodoFormValues>();
 
-  type TodoFormValues = {
-    title: string;
-  };
-
-  const onFinish = async (values: TodoFormValues) => {
+  const handleAddTask = async (values: TodoFormValues) => {
     const title = values.title.trim();
     try {
       await addTodo({ isDone: false, title });
@@ -29,7 +29,7 @@ const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
     }
   };
 
-  const onReset = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const cleaned = e.target.value.trim();
     if (cleaned) {
       form.setFieldValue("title", cleaned);
@@ -45,7 +45,7 @@ const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
         <Form
           form={form}
           name="todo"
-          onFinish={onFinish}
+          onFinish={handleAddTask}
           autoComplete="off"
           className={styles.wrapper}
         >
@@ -60,7 +60,7 @@ const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
             ]}
           >
             <Input
-              onBlur={onReset}
+              onBlur={handleInputBlur}
               placeholder="Input your task"
               className={styles.taskInput}
             />
