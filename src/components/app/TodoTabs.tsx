@@ -7,6 +7,10 @@ interface TodoTabsProps {
   setTabName: (key: TabType) => void;
 }
 
+const isFilterStatus = (key: string): key is TabType => {
+  return key === "all" || key === "inWork" || key === "completedd";
+};
+
 const TodoTabs: React.FC<TodoTabsProps> = ({ setTabName }) => {
   const items: TabsProps["items"] = [
     {
@@ -24,14 +28,14 @@ const TodoTabs: React.FC<TodoTabsProps> = ({ setTabName }) => {
   ];
 
   const handleTabChange = (key: string) => {
-    setTabName(key as TabType);
+    if (isFilterStatus(key)) {
+      setTabName(key);
+    }
   };
-
-  console.log("TodoTabs");
 
   return (
     <Tabs
-      defaultActiveKey="1"
+      defaultActiveKey="all"
       items={items}
       onTabClick={handleTabChange}
       style={{ margin: "0 auto" }}

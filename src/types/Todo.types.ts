@@ -6,8 +6,8 @@ export type Todo = {
 };
 
 export type CreateTodo = {
-  title: string;
-  isDone: boolean;
+  title?: string;
+  isDone?: boolean;
 };
 
 export type Info = {
@@ -21,7 +21,7 @@ export type Meta = {
 };
 
 export type TodoResponse<T, N> = {
-  data: T[]; 
+  data: T[];
   info: N;
   meta: Meta;
 };

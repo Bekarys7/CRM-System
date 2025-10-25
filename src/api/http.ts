@@ -2,24 +2,28 @@ import type { TabType } from "../types/Tab.types";
 import type { CreateTodo, TodoResponse, Todo, Info } from "../types/Todo.types";
 import { api } from "./axios";
 
-export async function addTodo(todo: CreateTodo) {
-  await api.post("/todos", todo);
+export async function addTodo(todo: CreateTodo): Promise<Todo> {
+  const { data } = await api.post("/todos", todo);
+  return data;
 }
 
-export async function fetchTodos(tab: TabType) {
+export async function fetchTodos(
+  tab: TabType
+): Promise<TodoResponse<Todo, Info>> {
   const response = await api.get<TodoResponse<Todo, Info>>(`/todos`, {
     params: { filter: tab },
   });
   return response.data;
 }
 
-export async function deleteTodos(id: number) {
+export async function deleteTodos(id: number): Promise<void> {
   await api.delete(`/todos/${id}`);
 }
 
 export async function editTodos(
   id: number,
-  changes: { title?: string; isDone?: boolean }
-) {
-  await api.put(`/todos/${id}`, changes);
+  changes: CreateTodo
+): Promise<Todo> {
+  const { data } = await api.put(`/todos/${id}`, changes);
+  return data;
 }
