@@ -21,20 +21,12 @@ const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
       await updateTodos();
       form.resetFields();
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
         alert(error.message);
       } else {
         alert("Unknown error");
       }
-    }
-  };
-
-  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const cleaned = e.target.value.trim();
-    if (cleaned) {
-      form.setFieldValue("title", cleaned);
-    } else {
-      form.resetFields();
     }
   };
 
@@ -59,11 +51,7 @@ const AddTaskInput: React.FC<UpdateTodos> = ({ updateTodos }) => {
               { max: 64, message: "Maximum of 64 charecters" },
             ]}
           >
-            <Input
-              onBlur={handleInputBlur}
-              placeholder="Input your task"
-              className={styles.taskInput}
-            />
+            <Input placeholder="Input your task" className={styles.taskInput} />
           </Form.Item>
 
           <Form.Item label={null}>

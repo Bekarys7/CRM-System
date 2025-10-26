@@ -1,4 +1,4 @@
-import React, { useCallback, useState, type FC } from "react";
+import React, { useState, type FC } from "react";
 import styles from "../app/TodoItem.module.scss";
 
 import { deleteTodos, editTodos } from "../../api/http";
@@ -26,35 +26,31 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  const handleDelete = useCallback(async () => {
+  const handleDelete = async () => {
     await deleteTodos(todo.id!);
     updateTodos();
-  }, [todo.id, updateTodos]);
+  };
 
-  const handleCheckbox: CheckboxProps["onChange"] = useCallback(async () => {
+  const handleCheckbox: CheckboxProps["onChange"] = async () => {
     await editTodos(todo.id!, { isDone: !todo.isDone });
     updateTodos();
-  }, [todo.id, todo.isDone, updateTodos]);
+  };
 
-  const handleEdit = useCallback(() => {
+  const handleEdit = () => {
     form.setFieldsValue({ title: todo.title.trim() });
     setIsEditing(true);
-  }, [todo.title, form]);
+  };
 
-  const handleCancel = useCallback(() => setIsEditing(false), []);
+  const handleCancel = () => setIsEditing(false);
 
-  const handleSubmit = useCallback(
-    async (values: { title: string }) => {
-      const title = values.title.trim();
-      if (!title) return;
-      await editTodos(todo.id!, { title });
-      await updateTodos();
-      setIsEditing(false);
-    },
-    [todo.id, updateTodos]
-  );
+  const handleSubmit = async (values: { title: string }) => {
+    const title = values.title.trim();
+    if (!title) return;
+    await editTodos(todo.id!, { title });
+    await updateTodos();
+    setIsEditing(false);
+  };
 
-  console.log("TodoItem");
   return (
     <div>
       {isEditing ? (
