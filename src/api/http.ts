@@ -24,6 +24,6 @@ export async function editTodos(
   id: number,
   changes: CreateTodo
 ): Promise<Todo> {
-  const { data } = await api.put(`/todos/${id}`, changes);
+  const { data } = await api.put<Todo>(`/todos/${id}`, changes);
   return data;
 }
