@@ -3,7 +3,7 @@ import type { CreateTodo, TodoResponse, Todo, Info } from "../types/Todo.types";
 import { api } from "./axios";
 
 export async function addTodo(todo: CreateTodo): Promise<Todo> {
-  const { data } = await api.post("/todos", todo);
+  const { data } = await api.post<Todo>("/todos", todo);
   return data;
 }
 
@@ -24,6 +24,6 @@ export async function editTodos(
   id: number,
   changes: CreateTodo
 ): Promise<Todo> {
-  const { data } = await api.put(`/todos/${id}`, changes);
+  const { data } = await api.put<Todo>(`/todos/${id}`, changes);
   return data;
 }
