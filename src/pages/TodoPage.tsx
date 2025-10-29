@@ -59,7 +59,7 @@ const TodoPage: React.FC = () => {
         <TodoInput updateTodos={fetchAndSetTodos} />
 
         <div className={styles.wrapper}>
-          <TodoTabs setTabName={handleTabChange} />
+          <TodoTabs setTabName={handleTabChange} todoInfo={todoData?.info} />
         </div>
 
         {showSpinner ? (

@@ -2,28 +2,30 @@ import React from "react";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import type { TabType } from "../../types/Tab.types";
+import type { Info } from "../../types/Todo.types";
 
 interface TodoTabsProps {
   setTabName: (key: TabType) => void;
+  todoInfo: Info | undefined;
 }
 
 const isFilterStatus = (key: string): key is TabType => {
-  return key === "all" || key === "inWork" || key === "completedd";
+  return key === "all" || key === "inWork" || key === "completed";
 };
 
-const TodoTabs: React.FC<TodoTabsProps> = ({ setTabName }) => {
+const TodoTabs: React.FC<TodoTabsProps> = ({ setTabName, todoInfo }) => {
   const items: TabsProps["items"] = [
     {
       key: "all",
-      label: "All",
+      label: `All(${todoInfo?.all || 0})`,
     },
     {
       key: "inWork",
-      label: "In Work",
+      label: `In Work(${todoInfo?.inWork || 0})`,
     },
     {
       key: "completed",
-      label: "Completed",
+      label: `Completed(${todoInfo?.completed || 0})`,
     },
   ];
 
