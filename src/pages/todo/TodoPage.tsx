@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import TodoTabs from "../components/app/TodoTabs.tsx";
-import TodoInput from "../components/app/TodoInput.tsx";
+import TodoTabs from "../../components/app/TodoTabs.tsx";
+import TodoInput from "../../components/app/TodoInput.tsx";
 import styles from "./TodoPage.module.scss";
-import TodoList from "../components/app/TodoList.tsx";
-import LoadingSpinner from "../components/app/LoadingSpinner.tsx";
-import { fetchTodos } from "../api/http.ts";
-import type { TodoResponse, Info, Todo } from "../types/Todo.types.ts";
-import type { TabType } from "../types/Tab.types.ts";
+import TodoList from "../../components/app/TodoList.tsx";
+import LoadingSpinner from "../../components/app/LoadingSpinner.tsx";
+import { fetchTodos } from "../../api/http.ts";
+import type { TodoResponse, Info, Todo } from "../../types/Todo.types.ts";
+import type { TabType } from "../../types/Tab.types.ts";
 
 const TodoPage: React.FC = () => {
   const [todoData, setTodoData] = useState<TodoResponse<Todo, Info>>();
@@ -59,7 +59,7 @@ const TodoPage: React.FC = () => {
         <TodoInput updateTodos={fetchAndSetTodos} />
 
         <div className={styles.wrapper}>
-          <TodoTabs setTabName={handleTabChange} />
+          <TodoTabs setTabName={handleTabChange} todoInfo={todoData?.info} />
         </div>
 
         {showSpinner ? (

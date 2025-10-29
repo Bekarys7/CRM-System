@@ -1,7 +1,15 @@
 import { api } from "./axios";
-import type { AuthSignUp } from "../types/Auth.types";
+import {} from "axios";
+import type { UserRegistration, AuthData } from "../types/Auth.types";
 
-export async function registerNewUser(obj: AuthSignUp): Promise<AuthSignUp> {
-  const response = await api.post<AuthSignUp>("/auth/signup", obj);
+export async function registerNewUser(
+  obj: UserRegistration
+): Promise<UserRegistration> {
+  const response = await api.post<UserRegistration>("/auth/signup", obj);
+  return response.data;
+}
+
+export async function AuthenticateUser(authData: AuthData): Promise<AuthData> {
+  const response = await api.post<AuthData>("/auth/signin", authData);
   return response.data;
 }

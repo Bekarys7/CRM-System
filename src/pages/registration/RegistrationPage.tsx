@@ -1,11 +1,10 @@
 import type { FormItemProps, FormProps } from "antd";
-import { Button, Form, Input, Select } from "antd";
-import { registerNewUser } from "../api/authApi";
-import type { AuthSignUp } from "../types/Auth.types";
+import { Button, Form, Input } from "antd";
+import { registerNewUser } from "../../api/authApi";
+import type { UserRegistration } from "../../types/Auth.types";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-const { Option } = Select;
+import { Link } from "react-router-dom";
+import { AxiosError } from "axios";
 
 const formItemLayout: FormProps = {
   labelCol: {
@@ -33,11 +32,10 @@ const tailFormItemLayout: FormItemProps = {
 
 const App: React.FC = () => {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
-  const [form] = Form.useForm<AuthSignUp>();
-  const navigate = useNavigate();
+  const [form] = Form.useForm<UserRegistration>();
   const [errorMessage, setIsErrorMessage] = useState<string>("");
 
-  const onFinish = async (values: AuthSignUp) => {
+  const onFinish = async (values: UserRegistration) => {
     try {
       await registerNewUser({
         email: values.email,
@@ -48,34 +46,28 @@ const App: React.FC = () => {
       });
       setIsRegistered(true);
     } catch (error) {
-      console.log(error);
-      if (error) {
-        setIsErrorMessage(error);
-      } else {
-        alert("Unknown error");
+      if (error instanceof Error && error instanceof AxiosError) {
+        setIsErrorMessage(error.response?.data);
       }
     }
   };
 
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="8">+7</Option>
-      </Select>
-    </Form.Item>
-  );
-
   return (
     <>
-      {isRegistered ? <p>Succsessed</p> : <p>{errorMessage}</p>}
+      {isRegistered ? (
+        <p>
+          Account created successfully
+          <br />
+          <Link to="/auth"> Go to Auth</Link>
+        </p>
+      ) : (
+        <p>{errorMessage}</p>
+      )}
       <Form
         {...formItemLayout}
         form={form}
         name="register"
         onFinish={onFinish}
-        initialValues={{
-          prefix: "+7",
-        }}
         style={{ maxWidth: 600 }}
         scrollToFirstError
       >
@@ -173,11 +165,7 @@ const App: React.FC = () => {
         </Form.Item>
 
         <Form.Item name="phoneNumber" label="Phone Number">
-          <Input
-            addonBefore={prefixSelector}
-            style={{ width: "100%" }}
-            value={8}
-          />
+          <Input style={{ width: "100%" }} />
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>

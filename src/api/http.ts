@@ -3,8 +3,11 @@ import type { CreateTodo, TodoResponse, Todo, Info } from "../types/Todo.types";
 import { api } from "./axios";
 
 export async function addTodo(todo: CreateTodo): Promise<Todo> {
-  const { data } = await api.post<Todo>("/todos", todo);
-  return data;
+  const response = await api.post<Todo>("/todos", todo, {
+    withCredentials: true,
+  });
+  console.log(response);
+  return response.data;
 }
 
 export async function fetchTodos(
