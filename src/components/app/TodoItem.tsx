@@ -26,7 +26,6 @@ type EditFormValues = {
 const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [form] = Form.useForm<EditFormValues>();
-
   const [api, contextHolder] = notification.useNotification();
 
   const openNotification = (message: string) => {
