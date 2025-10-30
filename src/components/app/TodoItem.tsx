@@ -4,13 +4,15 @@ import styles from "../app/TodoItem.module.scss";
 import { deleteTodos, editTodos } from "../../api/http";
 import type { Todo, UpdateTodos } from "../../types/Todo.types";
 import type { CheckboxProps } from "antd";
-import { Button, Form, Input, Checkbox, Space } from "antd";
+import { Button, Form, Input, Checkbox, Space, notification } from "antd";
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
+  SmileOutlined,
 } from "@ant-design/icons";
+import { AxiosError } from "axios";
 
 type TodoItemProps = {
   todo: Todo;
@@ -22,18 +24,39 @@ type EditFormValues = {
 };
 
 const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [form] = Form.useForm<EditFormValues>();
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (message: string) => {
+    api.open({
+      message: "Error",
+      description: `${message}`,
+      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+    });
+  };
 
   const handleDelete = async () => {
-    await deleteTodos(todo.id!);
-    updateTodos();
+    try {
+      await deleteTodos(todo.id!);
+      updateTodos();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        openNotification(`You can't delete cause ${error.response?.data}`);
+      }
+    }
   };
 
   const handleCheckbox: CheckboxProps["onChange"] = async () => {
-    await editTodos(todo.id!, { isDone: !todo.isDone });
-    updateTodos();
+    try {
+      await editTodos(todo.id!, { isDone: !todo.isDone });
+      updateTodos();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        openNotification(`You can't edit cause ${error.response?.data}`);
+      }
+    }
   };
 
   const handleEdit = () => {
@@ -41,14 +64,24 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
     setIsEditing(true);
   };
 
-  const handleCancel = () => setIsEditing(false);
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
 
   const handleSubmit = async (values: { title: string }) => {
-    const title = values.title.trim();
-    if (!title) return;
-    await editTodos(todo.id!, { title });
-    await updateTodos();
-    setIsEditing(false);
+    try {
+      const title = values.title.trim();
+      if (!title) {
+        return;
+      }
+      await editTodos(todo.id!, { title });
+      await updateTodos();
+      setIsEditing(false);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        openNotification(`You can't submit cause ${error.response?.data}`);
+      }
+    }
   };
 
   return (
@@ -113,6 +146,7 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
           </div>
         </div>
       )}
+      {contextHolder}
     </div>
   );
 };

@@ -5,12 +5,9 @@ export type Todo = {
   title: string;
 };
 
-export type CreateTodo = {
-  title?: string;
-  isDone?: boolean;
-};
+export type TodoRequest = Partial<Omit<Todo, "id" | "created">>;
 
-export type Info = {
+export type TodoInfo = {
   all: number;
   completed: number;
   inWork: number;
@@ -20,7 +17,7 @@ export type Meta = {
   totalAmount: number;
 };
 
-export type TodoResponse<T, N> = {
+export type MetaResponse<T, N> = {
   data: T[];
   info: N;
   meta: Meta;
