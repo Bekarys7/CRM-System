@@ -41,11 +41,15 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
     setIsEditing(true);
   };
 
-  const handleCancel = () => setIsEditing(false);
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
 
   const handleSubmit = async (values: { title: string }) => {
     const title = values.title.trim();
-    if (!title) return;
+    if (!title) {
+      return;
+    }
     await editTodos(todo.id!, { title });
     await updateTodos();
     setIsEditing(false);
