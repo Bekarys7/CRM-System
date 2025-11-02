@@ -1,0 +1,22 @@
+.wrapper {
+  margin-top: 10rem;
+  display: flex;
+  justify-content: center;
+
+  .loadingSpinner {
+    width: 8.125rem;
+    height: 8.125rem;
+    border: calc(8.125rem / 5) solid #ddd;
+    border-radius: 50%;
+    border-top-color: black;
+    animation: loading 0.75s ease infinite;
+  }
+}
+@keyframes loading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
