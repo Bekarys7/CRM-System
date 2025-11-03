@@ -5,3 +5,8 @@ export interface AuthSignUp {
   phoneNumber?: string;
   username: string;
 }
+
+export interface AuthData {
+  login: string;
+  password: string;
+}
