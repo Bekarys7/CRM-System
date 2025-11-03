@@ -1,7 +1,7 @@
 import type { FormItemProps, FormProps } from "antd";
 import { Button, Form, Input } from "antd";
 import { registerNewUser } from "../../api/authApi";
-import type { AuthSignUp } from "../../types/Auth.types";
+import type { UserRegistration } from "../../types/Auth.types";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
@@ -32,10 +32,10 @@ const tailFormItemLayout: FormItemProps = {
 
 const App: React.FC = () => {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
-  const [form] = Form.useForm<AuthSignUp>();
+  const [form] = Form.useForm<UserRegistration>();
   const [errorMessage, setIsErrorMessage] = useState<string>("");
 
-  const onFinish = async (values: AuthSignUp) => {
+  const onFinish = async (values: UserRegistration) => {
     try {
       await registerNewUser({
         email: values.email,

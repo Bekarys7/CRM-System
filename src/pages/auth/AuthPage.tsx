@@ -5,10 +5,10 @@ import styles from "./AuthPage.module.scss";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { AuthenticateUser } from "../../api/authApi";
-import type { AuthData } from "../../types/Auth.types";
+import type { AuthData, Token } from "../../types/Auth.types";
 
 const AuthCard: React.FC = () => {
-  const [token, setToken] = useState<AuthData>();
+  const [token, setToken] = useState<Token>();
 
   const onFinish = async (values: AuthData) => {
     const data = await AuthenticateUser({
