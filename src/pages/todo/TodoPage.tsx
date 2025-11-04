@@ -4,7 +4,7 @@ import TodoInput from "../../components/app/TodoInput.tsx";
 import styles from "./TodoPage.module.scss";
 import TodoList from "../../components/app/TodoList.tsx";
 import LoadingSpinner from "../../components/app/LoadingSpinner.tsx";
-import { fetchTodos } from "../../api/http.ts";
+import { fetchTodos } from "../../services/todo.service.ts";
 import type { MetaResponse, TodoInfo, Todo } from "../../types/Todo.types.ts";
 import type { TabType } from "../../types/Tab.types.ts";
 

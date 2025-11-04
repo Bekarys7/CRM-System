@@ -1,4 +1,4 @@
-import { api } from "./axios";
+import { api } from "../api/axios";
 import type {
   UserRegistration,
   AuthData,
@@ -12,14 +12,12 @@ export async function registerNewUser(obj: UserRegistration): Promise<Profile> {
   return response.data;
 }
 
-export async function AuthenticateUser(authData: AuthData): Promise<Token> {
+export async function login(authData: AuthData): Promise<Token> {
   const response = await api.post("/auth/signin", authData);
   return response.data;
 }
 
-export async function getUserData(token: string | undefined): Promise<Profile> {
-  const response = await api.get<Profile>("/user/profile", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export async function logout(authData: AuthData): Promise<string> {
+  const response = await api.post<string>("/auth/signin", authData);
   return response.data;
 }

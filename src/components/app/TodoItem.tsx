@@ -1,7 +1,7 @@
 import React, { useState, type FC } from "react";
 import styles from "../app/TodoItem.module.scss";
 
-import { deleteTodos, editTodos } from "../../api/http";
+import { deleteTodos, editTodos } from "../../services/todo.service";
 import type { Todo, UpdateTodos } from "../../types/Todo.types";
 import type { CheckboxProps } from "antd";
 import { Button, Form, Input, Checkbox, Space, notification } from "antd";

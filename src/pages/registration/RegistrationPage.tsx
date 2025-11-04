@@ -1,6 +1,6 @@
 import type { FormItemProps, FormProps } from "antd";
 import { Button, Form, Input } from "antd";
-import { registerNewUser } from "../../api/authApi";
+import { registerNewUser } from "../../services/auth.service";
 import type { UserRegistration } from "../../types/Auth.types";
 import { useState } from "react";
 import { Link } from "react-router-dom";

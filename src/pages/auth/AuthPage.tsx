@@ -1,24 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Checkbox, Form, Input, Card, Col, Row, Flex } from "antd";
 import authBackground from "../../assets/authBackground.svg";
 import styles from "./AuthPage.module.scss";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { AuthenticateUser } from "../../api/authApi";
-import type { AuthData, Token } from "../../types/Auth.types";
+import { login } from "../../services/auth.service";
+import type { AuthData } from "../../types/Auth.types";
 
 const AuthCard: React.FC = () => {
-  const [token, setToken] = useState<Token>();
-
   const onFinish = async (values: AuthData) => {
-    const data = await AuthenticateUser({
+    const data = await login({
       login: values.login,
       password: values.password,
     });
-    setToken(data);
+    document.cookie = `token=${data.accessToken}`;
   };
 
-  console.log(token);
   return (
     <div className={styles.authWrapper}>
       <Card
