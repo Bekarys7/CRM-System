@@ -9,6 +9,9 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
+import { useEffect } from "react";
+import { useAppDispatch } from "./store/hooks/hooks";
+import { checkAuth } from "./store/authActions";
 
 const router = createBrowserRouter([
   { path: "/auth", children: [{ index: true, element: <AuthPage /> }] },
@@ -18,22 +21,38 @@ const router = createBrowserRouter([
   },
 
   {
-    element: <ProtectedRoutes />,
+    path: "/",
+    element: <AppLayout />,
     children: [
+      { index: true, element: <Navigate to="tasks" replace /> },
       {
-        path: "/",
-        element: <AppLayout />,
-        children: [
-          { index: true, element: <Navigate to="tasks" /> },
-          { path: "tasks", element: <TodoPage /> },
-          { path: "profile", element: <ProfilePage /> },
-        ],
+        path: "tasks",
+        element: (
+          <ProtectedRoutes>
+            <TodoPage />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoutes>
+            <ProfilePage />
+          </ProtectedRoutes>
+        ),
       },
     ],
   },
 ]);
 
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      dispatch(checkAuth());
+    }
+  }, [dispatch]);
+
   return <RouterProvider router={router} />;
 }
 

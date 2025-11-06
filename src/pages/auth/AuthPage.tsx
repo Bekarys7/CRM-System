@@ -4,17 +4,22 @@ import authBackground from "../../assets/authBackground.svg";
 import styles from "./AuthPage.module.scss";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { login } from "../../services/auth.service";
 import type { AuthData } from "../../types/Auth.types";
+import { useAppDispatch, useAppSelector } from "../../store/hooks/hooks";
+import { login } from "../../store/authActions";
+import { Navigate } from "react-router-dom";
 
 const AuthCard: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const isAuth = useAppSelector((state) => state.auth.isAuth);
+
   const onFinish = async (values: AuthData) => {
-    const data = await login({
-      login: values.login,
-      password: values.password,
-    });
-    document.cookie = `token=${data.accessToken}`;
+    dispatch(login(values));
   };
+
+  if (isAuth) {
+    return <Navigate to="/tasks" replace />;
+  }
 
   return (
     <div className={styles.authWrapper}>

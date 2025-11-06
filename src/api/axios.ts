@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import type { Token } from "../types/Auth.types";
 
-const BASE_URL = "https://easydev.club/api/v1";
+export const BASE_URL = "https://easydev.club/api/v1";
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -10,12 +11,27 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
+  config.headers.Authorization = `Bearer ${localStorage.getItem(
+    "accessToken"
+  )}`;
   return config;
 });
 
-// export const axiosPrivate = axios.create({
-//   baseURL: BASE_URL,
-//   headers: { "Content-Type": "application/json" },
-//   withCredentials: true,
-// });
+api.interceptors.response.use(
+  (config) => {
+    return config;
+  },
+  async (error: AxiosError) => {
+    if (error.response && error.response.status === 401) {
+      const originalRequest = error.config;
+      const refreshToken = localStorage.getItem("refreshToken");
+      const response = await axios.post<Token>(`${BASE_URL}/auth/refresh`, {
+        refreshToken: refreshToken,
+      });
+      localStorage.setItem("acessToken", response.data.accessToken);
+      if (originalRequest) {
+        return api.request(originalRequest);
+      }
+    }
+  }
+);

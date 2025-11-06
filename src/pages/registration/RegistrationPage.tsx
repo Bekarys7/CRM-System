@@ -1,10 +1,11 @@
 import type { FormItemProps, FormProps } from "antd";
 import { Button, Form, Input } from "antd";
-import { registerNewUser } from "../../services/auth.service";
 import type { UserRegistration } from "../../types/Auth.types";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AxiosError } from "axios";
+import { useAppDispatch } from "../../store/hooks/hooks";
+import { register } from "../../store/authActions";
 
 const formItemLayout: FormProps = {
   labelCol: {
@@ -34,16 +35,11 @@ const App: React.FC = () => {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [form] = Form.useForm<UserRegistration>();
   const [errorMessage, setIsErrorMessage] = useState<string>("");
+  const dispatch = useAppDispatch();
 
   const onFinish = async (values: UserRegistration) => {
     try {
-      await registerNewUser({
-        email: values.email,
-        login: values.login,
-        password: values.password,
-        phoneNumber: values.phoneNumber,
-        username: values.username,
-      });
+      dispatch(register(values));
       setIsRegistered(true);
     } catch (error) {
       if (error instanceof Error && error instanceof AxiosError) {

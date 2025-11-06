@@ -6,18 +6,22 @@ import type {
   Profile,
 } from "../types/Auth.types";
 
-export async function registerNewUser(obj: UserRegistration): Promise<Profile> {
-  const response = await api.post<Profile>("/auth/signup", obj);
-  console.log(response);
-  return response.data;
-}
+export default class AuthService {
+  static async registerNewUser(obj: UserRegistration): Promise<Profile> {
+    const response = await api.post<Profile>("/auth/signup", obj);
+    console.log(response);
+    return response.data;
+  }
 
-export async function login(authData: AuthData): Promise<Token> {
-  const response = await api.post("/auth/signin", authData);
-  return response.data;
-}
+  static async login(authData: AuthData): Promise<Token> {
+    const response = await api.post<Token>("/auth/signin", authData);
+    console.log(response.data);
+    return response.data;
+  }
 
-export async function logout(authData: AuthData): Promise<string> {
-  const response = await api.post<string>("/auth/signin", authData);
-  return response.data;
+  static async logout(): Promise<string> {
+    const response = await api.post<string>("/user/logout");
+    console.log(response.data);
+    return response.data;
+  }
 }
