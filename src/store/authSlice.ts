@@ -1,14 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { checkAuth, login, logout } from "./authActions";
+import type { RootState } from "../store/store";
 
 interface userState {
   isAuth: boolean;
   isLoading: boolean;
+  token: string | null;
 }
 
 const initialState: userState = {
   isAuth: false,
   isLoading: false,
+  token: null,
 };
 
 export const authSlice = createSlice({
@@ -23,15 +26,13 @@ export const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isAuth = true;
-      if (action.payload) {
-        console.log(action.payload.refreshToken);
-        localStorage.setItem("accessToken", action.payload.accessToken);
-        localStorage.setItem("refreshToken", action.payload.refreshToken);
-      }
+      state.token = action.payload.accessToken;
+      localStorage.setItem("refreshToken", action.payload.refreshToken);
     });
     builder.addCase(login.rejected, (state) => {
       state.isLoading = false;
       state.isAuth = false;
+      state.token = null;
     });
     builder.addCase(checkAuth.pending, (state) => {
       state.isLoading = true;
@@ -39,15 +40,21 @@ export const authSlice = createSlice({
     builder.addCase(checkAuth.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isAuth = true;
-      if (action.payload) {
-        localStorage.setItem("accessToken", action.payload.accessToken);
+      if (action.payload?.accessToken) {
+        state.token = action.payload.accessToken;
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
       }
+    });
+    builder.addCase(checkAuth.rejected, (state) => {
+      state.isLoading = false;
+      state.isAuth = false;
+      state.token = null;
     });
     builder.addCase(logout.fulfilled, (state) => {
       state.isAuth = false;
       state.isLoading = false;
+      state.token = null;
       localStorage.removeItem("refreshToken");
-      localStorage.removeItem("accessToken");
     });
   },
 });
@@ -55,3 +62,5 @@ export const authSlice = createSlice({
 // Other code such as selectors can use the imported `RootState` type
 
 export default authSlice.reducer;
+
+export const selectAccessToken = (state: RootState) => state.auth.token;

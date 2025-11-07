@@ -10,7 +10,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { useEffect } from "react";
-import { useAppDispatch } from "./store/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "./store/hooks/hooks";
 import { checkAuth } from "./store/authActions";
 
 const router = createBrowserRouter([
@@ -47,8 +47,11 @@ const router = createBrowserRouter([
 
 function App() {
   const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
+  console.log("token", token);
+  console.log(localStorage.getItem("refreshToken"));
   useEffect(() => {
-    if (localStorage.getItem("accessToken")) {
+    if (localStorage.getItem("refreshToken")) {
       dispatch(checkAuth());
     }
   }, [dispatch]);
