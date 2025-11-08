@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { checkAuth, login, logout } from "./authActions";
-import type { RootState } from "../store/store";
 
 interface userState {
   isAuth: boolean;
@@ -26,8 +25,10 @@ export const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isAuth = true;
-      state.token = action.payload.accessToken;
-      localStorage.setItem("refreshToken", action.payload.refreshToken);
+      if (action.payload) {
+        state.token = action.payload.accessToken;
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
+      }
     });
     builder.addCase(login.rejected, (state) => {
       state.isLoading = false;
@@ -62,5 +63,3 @@ export const authSlice = createSlice({
 // Other code such as selectors can use the imported `RootState` type
 
 export default authSlice.reducer;
-
-export const selectAccessToken = (state: RootState) => state.auth.token;

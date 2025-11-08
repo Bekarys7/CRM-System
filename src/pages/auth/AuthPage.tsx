@@ -12,6 +12,7 @@ import { Navigate } from "react-router-dom";
 const AuthCard: React.FC = () => {
   const dispatch = useAppDispatch();
   const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const isLoading = useAppSelector((state) => state.auth.isLoading);
 
   const onFinish = async (values: AuthData) => {
     dispatch(login(values));

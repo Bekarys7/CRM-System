@@ -1,7 +1,7 @@
 const ProfilePage: React.FC = () => {
   return (
     <>
-      <div>Smile</div>;
+      <div>Smile</div>
     </>
   );
 };

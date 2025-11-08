@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "../services/auth.service";
 import type { AuthData, Token, UserRegistration } from "../types/Auth.types";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { api, BASE_URL } from "../api/axios";
 
 export const register = createAsyncThunk(
@@ -52,7 +52,7 @@ export const checkAuth = createAsyncThunk(
     try {
       const refreshToken = localStorage.getItem("refreshToken");
       console.log(`it is refresh token ${refreshToken}`);
-      const response = await api.post<Token>(`${BASE_URL}/auth/refresh`, {
+      const response = await axios.post<Token>(`${BASE_URL}/auth/refresh`, {
         refreshToken: refreshToken,
       });
       return response.data;
