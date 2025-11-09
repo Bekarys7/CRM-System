@@ -9,17 +9,20 @@ interface userState {
 
 const initialState: userState = {
   isAuth: false,
-  isLoading: false,
+  isLoading: true,
   token: null,
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    toggleIsLoading: (state) => {
+      state.isLoading = false;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
-      state.isLoading = true;
       state.isAuth = false;
     });
     builder.addCase(login.fulfilled, (state, action) => {
@@ -35,9 +38,6 @@ export const authSlice = createSlice({
       state.isAuth = false;
       state.token = null;
     });
-    builder.addCase(checkAuth.pending, (state) => {
-      state.isLoading = true;
-    });
     builder.addCase(checkAuth.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isAuth = true;
@@ -46,6 +46,9 @@ export const authSlice = createSlice({
         localStorage.setItem("refreshToken", action.payload.refreshToken);
       }
     });
+    builder.addCase(checkAuth.pending, (state) => {
+      state.isLoading = true;
+    });
     builder.addCase(checkAuth.rejected, (state) => {
       state.isLoading = false;
       state.isAuth = false;
@@ -53,13 +56,16 @@ export const authSlice = createSlice({
     });
     builder.addCase(logout.fulfilled, (state) => {
       state.isAuth = false;
-      state.isLoading = false;
       state.token = null;
+      state.isLoading = false;
       localStorage.removeItem("refreshToken");
+    });
+    builder.addCase(logout.pending, (state) => {
+      state.isLoading = false;
     });
   },
 });
 
-// Other code such as selectors can use the imported `RootState` type
+export const { toggleIsLoading } = authSlice.actions;
 
 export default authSlice.reducer;

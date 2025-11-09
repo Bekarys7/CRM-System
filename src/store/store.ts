@@ -26,14 +26,16 @@ api.interceptors.response.use(
       !error.config._isRetry
     ) {
       try {
+        console.log(error.response.status);
         originalRequest._isRetry = true;
         console.log(originalRequest);
         await store.dispatch(checkAuth());
         if (originalRequest) {
           return api.request(originalRequest);
         }
-      } catch (e) {
-        console.log("not auth");
+        throw error;
+      } catch (error) {
+        console.error("Ошибка при обновлении токена:", error);
       }
     }
     throw error;

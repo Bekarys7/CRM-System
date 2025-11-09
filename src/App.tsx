@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks/hooks";
 import { checkAuth } from "./store/authActions";
 import { App as AntdApp } from "antd";
 import LoadingSpinner from "./components/app/LoadingSpinner";
+import { toggleIsLoading } from "./store/authSlice";
 
 const router = createBrowserRouter([
   { path: "/auth", children: [{ index: true, element: <AuthPage /> }] },
@@ -50,7 +51,9 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((state) => state.auth.isLoading);
+
   useEffect(() => {
+    dispatch(toggleIsLoading());
     if (localStorage.getItem("refreshToken")) {
       dispatch(checkAuth());
     }

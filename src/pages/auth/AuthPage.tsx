@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Checkbox, Form, Input, Card, Col, Row, Flex } from "antd";
+import { Button, Checkbox, Form, Input, Card, Col, Row, Flex, App } from "antd";
 import authBackground from "../../assets/authBackground.svg";
 import styles from "./AuthPage.module.scss";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
@@ -8,14 +8,21 @@ import type { AuthData } from "../../types/Auth.types";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/hooks";
 import { login } from "../../store/authActions";
 import { Navigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 const AuthCard: React.FC = () => {
   const dispatch = useAppDispatch();
   const isAuth = useAppSelector((state) => state.auth.isAuth);
-  const isLoading = useAppSelector((state) => state.auth.isLoading);
+  const { notification } = App.useApp();
 
   const onFinish = async (values: AuthData) => {
-    dispatch(login(values));
+    try {
+      await dispatch(login(values)).unwrap();
+    } catch (error) {
+      if (error) {
+        notification.error({ message: ` ${error}` });
+      }
+    }
   };
 
   if (isAuth) {

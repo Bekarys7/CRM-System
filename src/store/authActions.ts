@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "../services/auth.service";
 import type { AuthData, Token, UserRegistration } from "../types/Auth.types";
 import axios, { AxiosError } from "axios";
-import { api, BASE_URL } from "../api/axios";
+import { BASE_URL } from "../api/axios";
 
 export const register = createAsyncThunk(
   "auth/register",
@@ -29,9 +29,9 @@ export const login = createAsyncThunk(
       return response;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const errorMessage = error.message || "Failed to login";
-        return rejectWithValue(errorMessage);
+        return rejectWithValue(error?.response?.data);
       }
+      return rejectWithValue(error);
     }
   }
 );
