@@ -1,16 +1,15 @@
 import React, { useState, type FC } from "react";
 import styles from "../app/TodoItem.module.scss";
-
+import { App } from "antd";
 import { deleteTodos, editTodos } from "../../services/todo.service";
 import type { Todo, UpdateTodos } from "../../types/Todo.types";
 import type { CheckboxProps } from "antd";
-import { Button, Form, Input, Checkbox, Space, notification } from "antd";
+import { Button, Form, Input, Checkbox, Space } from "antd";
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
-  SmileOutlined,
 } from "@ant-design/icons";
 import { AxiosError } from "axios";
 
@@ -26,15 +25,8 @@ type EditFormValues = {
 const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [form] = Form.useForm<EditFormValues>();
-  const [api, contextHolder] = notification.useNotification();
 
-  const openNotification = (message: string) => {
-    api.open({
-      message: "Error",
-      description: `${message}`,
-      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
-    });
-  };
+  const { notification } = App.useApp();
 
   const handleDelete = async () => {
     try {
@@ -42,7 +34,10 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
       updateTodos();
     } catch (error) {
       if (error instanceof AxiosError) {
-        openNotification(`You can't delete cause ${error.response?.data}`);
+        notification.error({
+          message: "Delete error",
+          description: `You can't delete cause ${error.response?.data}`,
+        });
       }
     }
   };
@@ -53,7 +48,10 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
       updateTodos();
     } catch (error) {
       if (error instanceof AxiosError) {
-        openNotification(`You can't edit cause ${error.response?.data}`);
+        notification.error({
+          message: "error",
+          description: `You can't edit cause ${error.response?.data}`,
+        });
       }
     }
   };
@@ -78,7 +76,10 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
       setIsEditing(false);
     } catch (error) {
       if (error instanceof AxiosError) {
-        openNotification(`You can't submit cause ${error.response?.data}`);
+        notification.error({
+          message: "submit error",
+          description: `You can't submit cause ${error.response?.data}`,
+        });
       }
     }
   };
@@ -145,7 +146,6 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
           </div>
         </div>
       )}
-      {contextHolder}
     </div>
   );
 };

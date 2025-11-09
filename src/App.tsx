@@ -12,6 +12,8 @@ import {
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./store/hooks/hooks";
 import { checkAuth } from "./store/authActions";
+import { App as AntdApp } from "antd";
+import LoadingSpinner from "./components/app/LoadingSpinner";
 
 const router = createBrowserRouter([
   { path: "/auth", children: [{ index: true, element: <AuthPage /> }] },
@@ -47,16 +49,20 @@ const router = createBrowserRouter([
 
 function App() {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
-  console.log("token", token);
-  console.log(localStorage.getItem("refreshToken"));
+  const isLoading = useAppSelector((state) => state.auth.isLoading);
   useEffect(() => {
     if (localStorage.getItem("refreshToken")) {
       dispatch(checkAuth());
     }
   }, [dispatch]);
 
-  return <RouterProvider router={router} />;
+  return isLoading ? (
+    <LoadingSpinner />
+  ) : (
+    <AntdApp>
+      <RouterProvider router={router} />
+    </AntdApp>
+  );
 }
 
 export default App;

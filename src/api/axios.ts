@@ -9,10 +9,3 @@ export const api = axios.create({
   timeout: 5000,
   headers: { "Content-Type": "application/json" },
 });
-
-api.interceptors.request.use((config) => {
-  config.headers.Authorization = `Bearer ${localStorage.getItem(
-    "accessToken"
-  )}`;
-  return config;
-});

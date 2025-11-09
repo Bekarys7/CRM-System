@@ -1,5 +1,5 @@
 import type { FormItemProps, FormProps } from "antd";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, App } from "antd";
 import type { UserRegistration } from "../../types/Auth.types";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -31,19 +31,22 @@ const tailFormItemLayout: FormItemProps = {
   },
 };
 
-const App: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [form] = Form.useForm<UserRegistration>();
   const [errorMessage, setIsErrorMessage] = useState<string>("");
+  const { notification } = App.useApp();
   const dispatch = useAppDispatch();
 
   const onFinish = async (values: UserRegistration) => {
     try {
       dispatch(register(values));
       setIsRegistered(true);
+      notification.success({ message: "success" });
     } catch (error) {
       if (error instanceof Error && error instanceof AxiosError) {
         setIsErrorMessage(error.response?.data);
+        notification.error({ message: "error" });
       }
     }
   };
@@ -174,4 +177,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default RegisterPage;
