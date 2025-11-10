@@ -1,11 +1,9 @@
 import React from "react";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styles from "./SideNavigation.module.scss";
 import { UnorderedListOutlined, UserOutlined } from "@ant-design/icons";
-import { logout } from "../../store/authActions";
-import { useAppDispatch } from "../../store/hooks/hooks";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -15,7 +13,7 @@ const items: MenuItem[] = [
     type: "group",
     children: [
       {
-        key: "/",
+        key: "/tasks",
         icon: <UnorderedListOutlined />,
         label: <Link to="/">Tasks</Link>,
       },
@@ -24,31 +22,20 @@ const items: MenuItem[] = [
         icon: <UserOutlined />,
         label: <Link to="/profile">Profile</Link>,
       },
-      {
-        key: "/logout",
-        icon: <UserOutlined />,
-        label: <Link to="/auth">Logout</Link>,
-      },
     ],
   },
 ];
 
 const Sidemenu: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const location = useLocation();
 
-  const handleMenuClick: MenuProps["onClick"] = (e) => {
-    if (e.key === "/logout") {
-      dispatch(logout());
-    }
-  };
   return (
     <Menu
-      defaultSelectedKeys={["/"]}
+      selectedKeys={[location.pathname]}
       style={{ backgroundColor: "#F5F5F5", border: "none" }}
       mode="inline"
       items={items}
       className={styles.menu}
-      onClick={handleMenuClick}
     />
   );
 };

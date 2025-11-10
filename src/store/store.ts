@@ -23,12 +23,12 @@ api.interceptors.response.use(
     if (
       error.response.status === 401 &&
       error.config &&
-      !error.config._isRetry
+      !error.config._isRetry &&
+      localStorage.getItem("refreshToken")
     ) {
       try {
         console.log(error.response.status);
         originalRequest._isRetry = true;
-        console.log(originalRequest);
         await store.dispatch(checkAuth());
         if (originalRequest) {
           return api.request(originalRequest);

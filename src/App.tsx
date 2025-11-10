@@ -15,12 +15,19 @@ import { checkAuth } from "./store/authActions";
 import { App as AntdApp } from "antd";
 import LoadingSpinner from "./components/app/LoadingSpinner";
 import { toggleIsLoading } from "./store/authSlice";
+import AuthLayout from "./layouts/AuthLayout";
 
 const router = createBrowserRouter([
-  { path: "/auth", children: [{ index: true, element: <AuthPage /> }] },
   {
-    path: "/registration",
-    children: [{ index: true, element: <RegistrationPage /> }],
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      { index: true, element: <AuthPage /> },
+      {
+        path: "signIn",
+        element: <RegistrationPage />,
+      },
+    ],
   },
 
   {
@@ -53,10 +60,18 @@ function App() {
   const isLoading = useAppSelector((state) => state.auth.isLoading);
 
   useEffect(() => {
-    dispatch(toggleIsLoading());
-    if (localStorage.getItem("refreshToken")) {
-      dispatch(checkAuth());
-    }
+    const dispatchData = async () => {
+      try {
+        dispatch(toggleIsLoading());
+        if (localStorage.getItem("refreshToken")) {
+          await dispatch(checkAuth());
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    dispatchData();
   }, [dispatch]);
 
   return isLoading ? (

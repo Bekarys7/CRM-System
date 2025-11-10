@@ -3,7 +3,6 @@ import { Button, Form, Input, App } from "antd";
 import type { UserRegistration } from "../../types/Auth.types";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { AxiosError } from "axios";
 import { useAppDispatch } from "../../store/hooks/hooks";
 import { register } from "../../store/authActions";
 
@@ -38,35 +37,24 @@ const RegisterPage: React.FC = () => {
   const { notification } = App.useApp();
   const dispatch = useAppDispatch();
 
-  const onFinish = async (values: UserRegistration) => {
+  const handleRegister = async (values: UserRegistration) => {
     try {
-      dispatch(register(values));
+      await dispatch(register(values)).unwrap();
       setIsRegistered(true);
       notification.success({ message: "success" });
     } catch (error) {
-      if (error instanceof Error && error instanceof AxiosError) {
-        setIsErrorMessage(error.response?.data);
-        notification.error({ message: "error" });
-      }
+      notification.error({ message: "Failed", description: `${error}` });
+      setIsErrorMessage(`${error}`);
     }
   };
 
   return (
     <>
-      {isRegistered ? (
-        <p>
-          Account created successfully
-          <br />
-          <Link to="/auth"> Go to Auth</Link>
-        </p>
-      ) : (
-        <p>{errorMessage}</p>
-      )}
       <Form
         {...formItemLayout}
         form={form}
         name="register"
-        onFinish={onFinish}
+        onFinish={handleRegister}
         style={{ maxWidth: 600 }}
         scrollToFirstError
       >
@@ -173,6 +161,16 @@ const RegisterPage: React.FC = () => {
           </Button>
         </Form.Item>
       </Form>
+
+      {isRegistered ? (
+        <p>
+          Account created successfully
+          <br />
+          <Link to="/auth"> Go to Auth</Link>
+        </p>
+      ) : (
+        <p>{errorMessage}</p>
+      )}
     </>
   );
 };

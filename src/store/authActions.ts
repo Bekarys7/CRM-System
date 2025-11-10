@@ -13,9 +13,9 @@ export const register = createAsyncThunk(
       return response;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const errorMessage = error.message || "Failed to login";
-        return rejectWithValue(errorMessage);
+        return rejectWithValue(error?.response?.data);
       }
+      return rejectWithValue(error);
     }
   }
 );
@@ -36,15 +36,21 @@ export const login = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("user/logout", async () => {
-  try {
-    const response = await AuthService.logout();
-    console.log(response);
-    return response;
-  } catch (error) {
-    console.log(error);
+export const logout = createAsyncThunk(
+  "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await AuthService.logout();
+      console.log(response);
+      return response;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(error?.response?.data);
+      }
+      return rejectWithValue(error);
+    }
   }
-});
+);
 
 export const checkAuth = createAsyncThunk(
   "auth/сheck",
@@ -58,9 +64,9 @@ export const checkAuth = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const errorMessage = error.message || "Failed to login";
-        return rejectWithValue(errorMessage);
+        return rejectWithValue(error?.response?.data);
       }
+      return rejectWithValue(error);
     }
   }
 );
