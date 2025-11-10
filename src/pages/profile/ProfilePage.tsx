@@ -6,7 +6,7 @@ import { useAppDispatch } from "../../store/hooks/hooks";
 import { logout } from "../../store/authActions";
 
 const ProfilePage: React.FC = () => {
-  const [userData, setUserData] = useState<Profile | null>();
+  const [userData, setUserData] = useState<Profile>();
 
   useEffect(() => {
     const fetchUserData = async () => {

@@ -1,28 +1,24 @@
 import React from "react";
 import { Button, Checkbox, Form, Input, Flex, App } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { AuthData } from "../../types/Auth.types";
-import { useAppDispatch, useAppSelector } from "../../store/hooks/hooks";
+import { useAppDispatch } from "../../store/hooks/hooks";
 import { login } from "../../store/authActions";
-import { Navigate } from "react-router-dom";
 
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const isAuth = useAppSelector((state) => state.auth.isAuth);
   const { notification } = App.useApp();
+  const navigate = useNavigate();
 
   const handleLogin = async (values: AuthData) => {
     try {
       await dispatch(login(values)).unwrap();
+      navigate("/tasks");
     } catch (error) {
       notification.error({ message: ` ${error}` });
     }
   };
-
-  if (isAuth) {
-    return <Navigate to="/tasks" replace />;
-  }
 
   return (
     <>

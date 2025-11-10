@@ -10,13 +10,13 @@ interface Props {
 }
 
 const ProtectedRoutes: FC<Props> = ({ children }) => {
-  const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const authStatus = useAppSelector((state) => state.auth.status);
 
-  if (isAuth) {
-    return children;
+  if (authStatus === "unauthenticated") {
+    return <Navigate to="/auth" replace />;
   }
 
-  return <Navigate to="/auth" replace />;
+  return children;
 };
 
 export default ProtectedRoutes;
