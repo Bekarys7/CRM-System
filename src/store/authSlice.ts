@@ -9,18 +9,14 @@ interface userState {
 
 const initialState: userState = {
   isAuth: false,
-  isLoading: true,
+  isLoading: false,
   token: null,
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    toggleIsLoading: (state) => {
-      state.isLoading = false;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
       state.isAuth = false;
@@ -65,7 +61,5 @@ export const authSlice = createSlice({
     });
   },
 });
-
-export const { toggleIsLoading } = authSlice.actions;
 
 export default authSlice.reducer;
