@@ -9,13 +9,12 @@ export const register = createAsyncThunk(
   async (payload: UserRegistration, { rejectWithValue }) => {
     try {
       const response = await AuthService.registerNewUser(payload);
-      console.log(response);
       return response;
     } catch (error) {
       if (error instanceof AxiosError) {
         return rejectWithValue(error?.response?.data);
       }
-      return rejectWithValue(error);
+      return rejectWithValue("Unknown error occurred");
     }
   }
 );
@@ -31,7 +30,7 @@ export const login = createAsyncThunk(
       if (error instanceof AxiosError) {
         return rejectWithValue(error?.response?.data);
       }
-      return rejectWithValue(error);
+      return rejectWithValue("Unknown error occurred");
     }
   }
 );
@@ -47,7 +46,7 @@ export const logout = createAsyncThunk(
       if (error instanceof AxiosError) {
         return rejectWithValue(error?.response?.data);
       }
-      return rejectWithValue(error);
+      return rejectWithValue("Unknown error occurred");
     }
   }
 );
@@ -63,10 +62,12 @@ export const checkAuth = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
+      localStorage.removeItem("refreshToken");
+
       if (error instanceof AxiosError) {
         return rejectWithValue(error?.response?.data);
       }
-      return rejectWithValue(error);
+      return rejectWithValue("Unknown error occurred");
     }
   }
 );

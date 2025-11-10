@@ -3,13 +3,13 @@ import { checkAuth, login, logout } from "./authActions";
 
 interface userState {
   isAuth: boolean;
-  isLoading: boolean;
+  status: "pending" | "authenticated" | "unauthenticated";
   token: string | null;
 }
 
 const initialState: userState = {
   isAuth: false,
-  isLoading: false,
+  status: "unauthenticated",
   token: null,
 };
 
@@ -19,10 +19,11 @@ export const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
+      state.status = "pending";
       state.isAuth = false;
     });
     builder.addCase(login.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.status = "authenticated";
       state.isAuth = true;
       if (action.payload) {
         state.token = action.payload.accessToken;
@@ -30,36 +31,39 @@ export const authSlice = createSlice({
       }
     });
     builder.addCase(login.rejected, (state) => {
-      state.isLoading = false;
+      state.status = "unauthenticated";
       state.isAuth = false;
       state.token = null;
     });
+    builder.addCase(checkAuth.pending, (state) => {
+      state.status = "pending";
+    });
     builder.addCase(checkAuth.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.status = "authenticated";
       state.isAuth = true;
       if (action.payload?.accessToken) {
         state.token = action.payload.accessToken;
         localStorage.setItem("refreshToken", action.payload.refreshToken);
       }
     });
-    builder.addCase(checkAuth.pending, (state) => {
-      state.isLoading = true;
-    });
     builder.addCase(checkAuth.rejected, (state) => {
-      state.isLoading = false;
+      state.status = "unauthenticated";
       state.isAuth = false;
       state.token = null;
+      localStorage.removeItem("refreshToken");
+    });
+    builder.addCase(logout.pending, (state) => {
+      state.status = "pending";
     });
     builder.addCase(logout.fulfilled, (state) => {
       state.isAuth = false;
       state.token = null;
-      state.isLoading = false;
       localStorage.removeItem("refreshToken");
-    });
-    builder.addCase(logout.pending, (state) => {
-      state.isLoading = false;
+      state.status = "unauthenticated";
     });
   },
 });
+
+// export const { toggleIsLoading } = authSlice.actions;
 
 export default authSlice.reducer;

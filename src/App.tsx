@@ -9,74 +9,77 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "./store/hooks/hooks";
+import { useEffect, useState } from "react";
+import { useAppDispatch } from "./store/hooks/hooks";
 import { checkAuth } from "./store/authActions";
 import { App as AntdApp } from "antd";
 import LoadingSpinner from "./components/app/LoadingSpinner";
-// import { toggleIsLoading } from "./store/authSlice";
 import AuthLayout from "./layouts/AuthLayout";
-
-const router = createBrowserRouter([
-  {
-    path: "/auth",
-    element: <AuthLayout />,
-    children: [
-      { index: true, element: <AuthPage /> },
-      {
-        path: "signIn",
-        element: <RegistrationPage />,
-      },
-    ],
-  },
-
-  {
-    path: "/",
-    element: <AppLayout />,
-    children: [
-      { index: true, element: <Navigate to="tasks" replace /> },
-      {
-        path: "tasks",
-        element: (
-          <ProtectedRoutes>
-            <TodoPage />
-          </ProtectedRoutes>
-        ),
-      },
-      {
-        path: "profile",
-        element: (
-          <ProtectedRoutes>
-            <ProfilePage />
-          </ProtectedRoutes>
-        ),
-      },
-    ],
-  },
-]);
 
 function App() {
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((state) => state.auth.isLoading);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   useEffect(() => {
-    const dispatchData = async () => {
-      try {
-        // dispatch(toggleIsLoading());
-        if (localStorage.getItem("refreshToken")) {
-          await dispatch(checkAuth());
+    const initAuth = async () => {
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      if (refreshToken) {
+        try {
+          await dispatch(checkAuth()).unwrap();
+        } catch (error) {
+          console.error("Auth check failed:", error);
         }
-      } catch (e) {
-        console.log(e);
       }
+
+      setIsInitialized(true);
     };
 
-    dispatchData();
+    initAuth();
   }, [dispatch]);
 
-  return isLoading ? (
-    <LoadingSpinner />
-  ) : (
+  if (!isInitialized) {
+    return <LoadingSpinner />;
+  }
+
+  const router = createBrowserRouter([
+    {
+      path: "/auth",
+      element: <AuthLayout />,
+      children: [
+        { index: true, element: <AuthPage /> },
+        {
+          path: "signIn",
+          element: <RegistrationPage />,
+        },
+      ],
+    },
+    {
+      path: "/",
+      element: <AppLayout />,
+      children: [
+        { index: true, element: <Navigate to="tasks" replace /> },
+        {
+          path: "tasks",
+          element: (
+            <ProtectedRoutes>
+              <TodoPage />
+            </ProtectedRoutes>
+          ),
+        },
+        {
+          path: "profile",
+          element: (
+            <ProtectedRoutes>
+              <ProfilePage />
+            </ProtectedRoutes>
+          ),
+        },
+      ],
+    },
+  ]);
+
+  return (
     <AntdApp>
       <RouterProvider router={router} />
     </AntdApp>
