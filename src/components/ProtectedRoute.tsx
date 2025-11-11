@@ -1,5 +1,3 @@
-// components/ProtectedRoutes.tsx
-
 import { useAppSelector } from "../store/hooks/hooks";
 import { type JSX } from "react";
 import type { FC } from "react";
