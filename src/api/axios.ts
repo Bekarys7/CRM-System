@@ -1,7 +1,11 @@
 import axios from "axios";
 
+// import type { Token } from "../types/Auth.types";
+
+export const BASE_URL = "https://easydev.club/api/v1";
+
 export const api = axios.create({
-  baseURL: "https://easydev.club/api/v1",
+  baseURL: BASE_URL,
   timeout: 5000,
   headers: { "Content-Type": "application/json" },
 });

@@ -2,11 +2,11 @@ import React from "react";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import type { TabType } from "../../types/Tab.types";
-import type { Info } from "../../types/Todo.types";
+import type { TodoInfo } from "../../types/Todo.types";
 
 interface TodoTabsProps {
   setTabName: (key: TabType) => void;
-  todoInfo: Info | undefined;
+  todoInfo: TodoInfo | undefined;
 }
 
 const isFilterStatus = (key: string): key is TabType => {

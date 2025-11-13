@@ -1,7 +1,7 @@
 import styles from "../app/TodoInput.module.scss";
 import React, { memo } from "react";
 import { Button, Form, Input } from "antd";
-import { addTodo } from "../../api/http";
+import { addTodo } from "../../services/todo.service";
 
 export type UpdateTodos = {
   updateTodos: () => Promise<void>;
