@@ -25,3 +25,36 @@ export default class AuthService {
     return response.data;
   }
 }
+
+export class Auth2Service {
+  #accessToken: null | string = null;
+
+  async login(authData: AuthData) {
+    const response = await api.post<Token>("/auth/signin", authData);
+    this.#accessToken = response.data.accessToken;
+    localStorage.setItem("refreshToken", response.data.refreshToken);
+  }
+
+  get token() {
+    return this.#accessToken;
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await api.post<string>("/user/logout");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      localStorage.removeItem("refreshToken");
+      this.#accessToken = null;
+    }
+  }
+
+  async registerNewUser(obj: UserRegistration): Promise<void> {
+    try {
+      await api.post<Profile>("/auth/signup", obj);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
