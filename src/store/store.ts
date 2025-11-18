@@ -2,14 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./authSlice";
 import { api } from "../api/axios";
 import { checkAuth } from "./authActions";
+import { authService } from "../services/auth.service";
 
 export const store = configureStore({
   reducer: { auth: authSlice },
 });
 
 api.interceptors.request.use((config) => {
-  const state = store.getState();
-  const token = state.auth.token;
+  const token = authService.accessToken;
   config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
@@ -27,7 +27,6 @@ api.interceptors.response.use(
       localStorage.getItem("refreshToken")
     ) {
       try {
-        console.log(error.response.status);
         originalRequest._isRetry = true;
         await store.dispatch(checkAuth());
         if (originalRequest) {

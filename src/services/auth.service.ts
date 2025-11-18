@@ -1,4 +1,5 @@
-import { api } from "../api/axios";
+import axios from "axios";
+import { api, BASE_URL } from "../api/axios";
 import type {
   UserRegistration,
   AuthData,
@@ -6,37 +7,13 @@ import type {
   Profile,
 } from "../types/Auth.types";
 
-export default class AuthService {
-  static async registerNewUser(obj: UserRegistration): Promise<Profile> {
-    const response = await api.post<Profile>("/auth/signup", obj);
-    console.log(response);
-    return response.data;
-  }
-
-  static async login(authData: AuthData): Promise<Token> {
-    const response = await api.post<Token>("/auth/signin", authData);
-    console.log(response.data);
-    return response.data;
-  }
-
-  static async logout(): Promise<string> {
-    const response = await api.post<string>("/user/logout");
-    console.log(response.data);
-    return response.data;
-  }
-}
-
-export class Auth2Service {
+class AuthService {
   #accessToken: null | string = null;
 
   async login(authData: AuthData) {
     const response = await api.post<Token>("/auth/signin", authData);
     this.#accessToken = response.data.accessToken;
     localStorage.setItem("refreshToken", response.data.refreshToken);
-  }
-
-  get token() {
-    return this.#accessToken;
   }
 
   async logout(): Promise<void> {
@@ -51,10 +28,27 @@ export class Auth2Service {
   }
 
   async registerNewUser(obj: UserRegistration): Promise<void> {
+    await api.post<Profile>("/auth/signup", obj);
+  }
+
+  async checkAuth(): Promise<void> {
+    const refreshToken = localStorage.getItem("refreshToken");
     try {
-      await api.post<Profile>("/auth/signup", obj);
+      const response = await axios.post<Token>(`${BASE_URL}/auth/refresh`, {
+        refreshToken: refreshToken,
+      });
+      this.#accessToken = response.data.accessToken;
+      localStorage.setItem("refreshToken", response.data.refreshToken);
     } catch (error) {
-      console.log(error);
+      this.#accessToken = null;
+      localStorage.removeItem("refreshToken");
+      throw error;
     }
   }
+
+  get accessToken() {
+    return this.#accessToken;
+  }
 }
+
+export const authService = new AuthService();

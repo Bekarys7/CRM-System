@@ -11,12 +11,12 @@ export default class UserService {
     return response.data;
   }
   static async updateUserData(data: ProfileRequest): Promise<Profile> {
-    const response = await api.put<Profile>("/user/profile", { data });
+    const response = await api.put<Profile>("/user/profile", data);
     return response.data;
   }
 
   static async updateUserPassword(data: PasswordRequest): Promise<string> {
-    const response = await api.put<string>("/user/profile", { data });
+    const response = await api.put<string>("/user/profile", data);
     return response.data;
   }
 }
