@@ -30,7 +30,7 @@ const tailFormItemLayout: FormItemProps = {
   },
 };
 
-const RegisterPage: React.FC = () => {
+const RegistrationPage: React.FC = () => {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [form] = Form.useForm<UserRegistration>();
   const [errorMessage, setIsErrorMessage] = useState<string>("");
@@ -41,15 +41,21 @@ const RegisterPage: React.FC = () => {
     try {
       await dispatch(register(values)).unwrap();
       setIsRegistered(true);
-      notification.success({ message: "success" });
+      notification.success({
+        message: "Success",
+        description: "You have successfully registered",
+      });
     } catch (error) {
-      notification.error({ message: "Failed", description: `${error}` });
+      notification.error({
+        message: "Registration Failed",
+        description: `${error}`,
+      });
       setIsErrorMessage(`${error}`);
     }
   };
 
   return (
-    <>
+    <div>
       <Form
         {...formItemLayout}
         form={form}
@@ -125,7 +131,7 @@ const RegisterPage: React.FC = () => {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The new password that you entered do not match!")
+                  new Error("The passwords you entered do not match!")
                 );
               },
             }),
@@ -151,7 +157,16 @@ const RegisterPage: React.FC = () => {
           <Input />
         </Form.Item>
 
-        <Form.Item name="phoneNumber" label="Phone Number">
+        <Form.Item
+          name="phoneNumber"
+          label="Phone Number"
+          rules={[
+            {
+              pattern: new RegExp(/^\+?\d{10,11}$/),
+              message: "Enter digits only (e.g., 8708ххххххх)",
+            },
+          ]}
+        >
           <Input style={{ width: "100%" }} />
         </Form.Item>
 
@@ -171,8 +186,8 @@ const RegisterPage: React.FC = () => {
       ) : (
         <p>{errorMessage}</p>
       )}
-    </>
+    </div>
   );
 };
 
-export default RegisterPage;
+export default RegistrationPage;

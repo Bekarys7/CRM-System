@@ -10,7 +10,7 @@ import type {
 class AuthService {
   #accessToken: null | string = null;
 
-  async login(authData: AuthData) {
+  async login(authData: AuthData): Promise<void> {
     const response = await api.post<Token>("/auth/signin", authData);
     this.#accessToken = response.data.accessToken;
     localStorage.setItem("refreshToken", response.data.refreshToken);
@@ -19,20 +19,21 @@ class AuthService {
   async logout(): Promise<void> {
     try {
       await api.post<string>("/user/logout");
-    } catch (error) {
-      console.log(error);
     } finally {
       localStorage.removeItem("refreshToken");
       this.#accessToken = null;
     }
   }
 
-  async registerNewUser(obj: UserRegistration): Promise<void> {
+  async registerUser(obj: UserRegistration): Promise<void> {
     await api.post<Profile>("/auth/signup", obj);
   }
 
   async checkAuth(): Promise<void> {
     const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) {
+      return;
+    }
     try {
       const response = await axios.post<Token>(`${BASE_URL}/auth/refresh`, {
         refreshToken: refreshToken,

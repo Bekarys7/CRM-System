@@ -1,13 +1,8 @@
 import { useAppSelector } from "../store/hooks/hooks";
-import { type JSX } from "react";
-import type { FC } from "react";
+import type { FC, PropsWithChildren } from "react";
 import { Navigate } from "react-router-dom";
 
-interface Props {
-  children: JSX.Element;
-}
-
-const ProtectedRoutes: FC<Props> = ({ children }) => {
+const ProtectedRoute: FC<PropsWithChildren> = ({ children }) => {
   const authStatus = useAppSelector((state) => state.auth.status);
 
   if (authStatus === "unauthenticated") {
@@ -17,4 +12,4 @@ const ProtectedRoutes: FC<Props> = ({ children }) => {
   return children;
 };
 
-export default ProtectedRoutes;
+export default ProtectedRoute;

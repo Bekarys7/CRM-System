@@ -26,7 +26,7 @@ const items: MenuItem[] = [
   },
 ];
 
-const Sidemenu: React.FC = () => {
+const SideNavigation: React.FC = () => {
   const location = useLocation();
 
   return (
@@ -40,4 +40,4 @@ const Sidemenu: React.FC = () => {
   );
 };
 
-export default Sidemenu;
+export default SideNavigation;

@@ -7,7 +7,7 @@ export const register = createAsyncThunk(
   "auth/register",
   async (payload: UserRegistration, { rejectWithValue }) => {
     try {
-      await authService.registerNewUser(payload);
+      await authService.registerUser(payload);
     } catch (error) {
       if (error instanceof AxiosError) {
         return rejectWithValue(error?.response?.data);

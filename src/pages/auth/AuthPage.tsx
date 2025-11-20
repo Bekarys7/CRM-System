@@ -3,7 +3,7 @@ import { useAppSelector } from "../../store/hooks/hooks";
 import { Navigate } from "react-router-dom";
 import LoginForm from "../../components/auth/LoginForm";
 
-const AuthCard: React.FC = () => {
+const AuthPage: React.FC = () => {
   const isAuth = useAppSelector((state) => state.auth.isAuth);
 
   if (isAuth) {
@@ -16,4 +16,4 @@ const AuthCard: React.FC = () => {
     </>
   );
 };
-export default AuthCard;
+export default AuthPage;

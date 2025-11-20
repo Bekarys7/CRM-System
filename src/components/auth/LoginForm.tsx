@@ -21,46 +21,44 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <>
-      <Form
-        name="auth"
-        initialValues={{ remember: true }}
-        style={{ maxWidth: 360 }}
-        onFinish={handleLogin}
+    <Form
+      name="auth"
+      initialValues={{ remember: true }}
+      style={{ maxWidth: 360 }}
+      onFinish={handleLogin}
+    >
+      <Form.Item
+        name="login"
+        rules={[{ required: true, message: "Please input your Username!" }]}
       >
-        <Form.Item
-          name="login"
-          rules={[{ required: true, message: "Please input your Username!" }]}
-        >
-          <Input prefix={<UserOutlined />} placeholder="Username" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[{ required: true, message: "Please input your Password!" }]}
-        >
-          <Input
-            prefix={<LockOutlined />}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Flex justify="space-between" align="center">
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-            <Link to={"password"}>Forgot password</Link>
-          </Flex>
-        </Form.Item>
+        <Input prefix={<UserOutlined />} placeholder="Username" />
+      </Form.Item>
+      <Form.Item
+        name="password"
+        rules={[{ required: true, message: "Please input your Password!" }]}
+      >
+        <Input
+          prefix={<LockOutlined />}
+          type="password"
+          placeholder="Password"
+        />
+      </Form.Item>
+      <Form.Item>
+        <Flex justify="space-between" align="center">
+          <Form.Item name="remember" valuePropName="checked" noStyle>
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+          <Link to={"password"}>Forgot password</Link>
+        </Flex>
+      </Form.Item>
 
-        <Form.Item>
-          <Button block type="primary" htmlType="submit">
-            Log in
-          </Button>
-          or <Link to="signIn">Register now!</Link>
-        </Form.Item>
-      </Form>
-    </>
+      <Form.Item>
+        <Button block type="primary" htmlType="submit">
+          Log in
+        </Button>
+        or <Link to="signUp">Register now!</Link>
+      </Form.Item>
+    </Form>
   );
 };
 export default LoginForm;

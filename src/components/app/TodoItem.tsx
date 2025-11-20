@@ -25,7 +25,6 @@ type EditFormValues = {
 const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [form] = Form.useForm<EditFormValues>();
-
   const { notification } = App.useApp();
 
   const handleDelete = async () => {
@@ -42,7 +41,7 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
     }
   };
 
-  const handleCheckbox: CheckboxProps["onChange"] = async () => {
+  const handleToggleComplete: CheckboxProps["onChange"] = async () => {
     try {
       await editTodos(todo.id!, { isDone: !todo.isDone });
       updateTodos();
@@ -119,7 +118,7 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodos }) => {
         <div className={styles.control}>
           <Space size="small">
             <Checkbox
-              onChange={handleCheckbox}
+              onChange={handleToggleComplete}
               checked={todo.isDone}
             ></Checkbox>
 
