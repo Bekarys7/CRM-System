@@ -1,12 +1,13 @@
 import axios from "axios";
 import { authService } from "../services/auth.service";
 import { logout } from "../store/authActions";
+import type { AppStore } from "../store/store";
 
 export const BASE_URL = "https://easydev.club/api/v1";
 
-let store: any;
+let store: AppStore;
 
-export const injectStore = (_store: any) => {
+export const injectStore = (_store: AppStore) => {
   store = _store;
 };
 
