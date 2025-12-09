@@ -5,7 +5,7 @@ import type {
   Todo,
   TodoInfo,
 } from "../types/Todo.types";
-import { api } from "./axios";
+import { api } from "../api/axios";
 
 export async function addTodo(todo: TodoRequest): Promise<Todo> {
   const { data } = await api.post<Todo>("/todos", todo);
