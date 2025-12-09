@@ -22,6 +22,11 @@ const items: MenuItem[] = [
         icon: <UserOutlined />,
         label: <Link to="/profile">Profile</Link>,
       },
+      {
+        key: "/users",
+        icon: <UserOutlined />,
+        label: <Link to="/users">Users</Link>,
+      },
     ],
   },
 ];
