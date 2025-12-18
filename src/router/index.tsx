@@ -6,6 +6,7 @@ import TodoPage from "../pages/todo/TodoPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
+import UsersPage from "../pages/users/Users";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "users",
+        element: (
+          <ProtectedRoute>
+            <UsersPage />
           </ProtectedRoute>
         ),
       },
