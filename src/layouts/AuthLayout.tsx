@@ -1,16 +1,17 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Card, Col, notification, Row } from "antd";
 import styles from "../pages/auth/AuthPage.module.scss";
 import authBackground from "../assets/authBackground.svg";
 import LoadingSpinner from "../components/app/LoadingSpinner";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../store/hooks/hooks";
+import { useAppDispatch } from "../store/hooks/hooks";
 import { checkAuth } from "../store/authActions";
 
 const AuthLayout: React.FC = () => {
   const dispatch = useAppDispatch();
-  const isAuth = useAppSelector((state) => state.auth.isAuth);
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const initAuth = async () => {
@@ -19,6 +20,10 @@ const AuthLayout: React.FC = () => {
       if (refreshToken) {
         try {
           await dispatch(checkAuth()).unwrap();
+          const fromPage = location.state?.from?.pathname || "/tasks";
+          navigate(fromPage, { replace: true });
+
+          return;
         } catch (error) {
           notification.error({
             message: "Auth check failed",
@@ -31,11 +36,7 @@ const AuthLayout: React.FC = () => {
     };
 
     initAuth();
-  }, [dispatch]);
-
-  if (isAuth) {
-    return <Navigate to="/tasks" replace />;
-  }
+  }, [dispatch, navigate, location]);
 
   if (!isInitialized) {
     return <LoadingSpinner />;

@@ -3,7 +3,11 @@ import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./SideNavigation.module.scss";
-import { UnorderedListOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  TeamOutlined,
+  UnorderedListOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -24,8 +28,8 @@ const items: MenuItem[] = [
       },
       {
         key: "/users",
-        icon: <UserOutlined />,
-        label: <Link to="/users">Profile</Link>,
+        icon: <TeamOutlined />,
+        label: <Link to="/users">Users</Link>,
       },
     ],
   },
