@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
@@ -8,35 +8,53 @@ import {
   UnorderedListOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import UserService from "../../services/user.service";
+import type { Profile } from "../../types/Auth.types";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const items: MenuItem[] = [
-  {
-    key: "grp",
-    type: "group",
-    children: [
-      {
-        key: "/tasks",
-        icon: <UnorderedListOutlined />,
-        label: <Link to="/">Tasks</Link>,
-      },
-      {
-        key: "/profile",
-        icon: <UserOutlined />,
-        label: <Link to="/profile">Profile</Link>,
-      },
-      {
-        key: "/users",
-        icon: <TeamOutlined />,
-        label: <Link to="/users">Users</Link>,
-      },
-    ],
-  },
-];
-
 const SideNavigation: React.FC = () => {
+  const [userData, setUserData] = useState<Profile>();
   const location = useLocation();
+  const isAdmin =
+    userData?.roles?.some((role) => ["ADMIN", "MODERATOR"].includes(role)) ??
+    false;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const data = await UserService.getUserData();
+      setUserData(data);
+    };
+    fetchUserData();
+  }, []);
+
+  const items: MenuItem[] = [
+    {
+      key: "grp",
+      type: "group",
+      children: [
+        {
+          key: "/tasks",
+          icon: <UnorderedListOutlined />,
+          label: <Link to="/">Tasks</Link>,
+        },
+        {
+          key: "/profile",
+          icon: <UserOutlined />,
+          label: <Link to="/profile">Profile</Link>,
+        },
+        ...(isAdmin
+          ? [
+              {
+                key: "/users",
+                icon: <TeamOutlined />,
+                label: <Link to="/users">Users</Link>,
+              },
+            ]
+          : []),
+      ],
+    },
+  ];
 
   return (
     <Menu

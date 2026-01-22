@@ -1,27 +1,90 @@
-import React, { useEffect, useState } from "react";
-import { Button, Flex, Input, Space, Table, Tag } from "antd";
+import React, { useState } from "react";
+import { Button, Flex, Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
-import type { User, UserFilters } from "../../types/Users.types";
-import UserService from "../../services/user.service";
-import type { MetaResponse } from "../../types/Users.types";
+import { PermissionsModal } from "./PermissionModal";
+import type { MetaResponse, User, UserFilters } from "../../types/Users.types";
+
 import {
   DownOutlined,
+  MoreOutlined,
   SortAscendingOutlined,
   SortDescendingOutlined,
   UpOutlined,
 } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import UserService from "../../services/user.service";
 
-const UsersTable: React.FC = () => {
-  const [userData, setUserData] = useState<MetaResponse<User>>();
-  const [sortOrder, setSortOrder] = useState<UserFilters["sortOrder"]>("asc");
-  const [sortBy, setSortBy] = useState<UserFilters["sortBy"]>("id");
+type UsersTable = {
+  usersData: MetaResponse<User> | undefined;
+  setFilters: React.Dispatch<React.SetStateAction<UserFilters>>;
+  filters: UserFilters;
+  onRefresh: () => void;
+};
+
+const UsersTable: React.FC<UsersTable> = ({
+  usersData,
+  setFilters,
+  filters,
+  onRefresh,
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | undefined>();
+
+  const handleOpenPermissions = (user: User) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedUser(undefined);
+  };
+
+  const data: User[] =
+    usersData?.data.map((user) => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      date: user.date,
+      isBlocked: user.isBlocked,
+      roles: user.roles,
+      phoneNumber: user.phoneNumber,
+    })) ?? [];
 
   const handleSortOrder = () => {
-    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    const newOrder = filters.sortOrder === "asc" ? "desc" : "asc";
+    setFilters((prev) => ({ ...prev, sortOrder: newOrder }));
   };
 
   const handleSortBy = () => {
-    setSortBy((prev) => (prev === "username" ? "id" : "username"));
+    const newSortBy = filters.sortBy === "id" ? "username" : "id";
+    setFilters((prev) => ({ ...prev, sortBy: newSortBy }));
+  };
+
+  const handleBlockUser = async (userId: number) => {
+    const reponse = await UserService.blockUser(userId);
+    onRefresh();
+    return reponse;
+  };
+
+  const handleUnblockUser = async (userId: number) => {
+    const reponse = await UserService.unblockUser(userId);
+    onRefresh();
+    return reponse;
+  };
+
+  const handleDeleteUser = async (userId: number) => {
+    const reponse = await UserService.deleteUser(userId);
+    setFilters((prev) => ({ ...prev }));
+    return reponse;
+  };
+
+  const handleTableChange: TableProps<User>["onChange"] = (pagination) => {
+    setFilters((prev) => ({
+      ...prev,
+      page: pagination.current ?? 0,
+      limit: pagination.pageSize ?? 20,
+    }));
   };
 
   const columns: TableProps<User>["columns"] = [
@@ -32,18 +95,13 @@ const UsersTable: React.FC = () => {
           <Button
             shape="circle"
             size="small"
+            onClick={handleSortOrder}
             style={{ border: "none", backgroundColor: "#FAFAFA" }}
           >
-            {sortOrder === "asc" ? (
-              <SortAscendingOutlined
-                onClick={handleSortOrder}
-                style={{ cursor: "pointer" }}
-              />
+            {filters.sortOrder === "asc" ? (
+              <SortAscendingOutlined style={{ cursor: "pointer" }} />
             ) : (
-              <SortDescendingOutlined
-                onClick={handleSortOrder}
-                style={{ cursor: "pointer" }}
-              />
+              <SortDescendingOutlined style={{ cursor: "pointer" }} />
             )}
           </Button>
         </>
@@ -59,18 +117,13 @@ const UsersTable: React.FC = () => {
           <Button
             shape="circle"
             size="small"
+            onClick={handleSortBy}
             style={{ border: "none", backgroundColor: "#FAFAFA" }}
           >
-            {sortBy === "id" ? (
-              <UpOutlined
-                onClick={handleSortBy}
-                style={{ cursor: "pointer" }}
-              />
+            {filters.sortBy === "id" ? (
+              <UpOutlined style={{ cursor: "pointer" }} />
             ) : (
-              <DownOutlined
-                onClick={handleSortBy}
-                style={{ cursor: "pointer" }}
-              />
+              <DownOutlined style={{ cursor: "pointer" }} />
             )}
           </Button>
         </>
@@ -115,46 +168,84 @@ const UsersTable: React.FC = () => {
     },
     { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber" },
     {
-      title: "Action",
-      key: "action",
+      title: "Edit profile",
+      key: "edit",
+      render: (_, record) => (
+        <>
+          <Link to={`/users/:${record.id}`}>View profile</Link>
+        </>
+      ),
+    },
+    {
+      title: "block/unblock",
+      key: "block/unblock",
       render: (_, record) => (
         <Space size="middle">
-          <a>Invite {record.username}</a>
-          <a>Delete</a>
+          {!record.isBlocked ? (
+            <Button
+              type="primary"
+              danger
+              onClick={() => handleBlockUser(record.id)}
+            >
+              Block
+            </Button>
+          ) : (
+            <Button type="primary" onClick={() => handleUnblockUser(record.id)}>
+              Unblock
+            </Button>
+          )}
         </Space>
+      ),
+    },
+    {
+      title: " Delete",
+      key: "delete",
+      render: (_, record) => (
+        <Button
+          type="primary"
+          danger
+          onClick={() => handleDeleteUser(record.id)}
+        >
+          Delete
+        </Button>
+      ),
+    },
+    {
+      title: "Permissions",
+      key: "permissions",
+      render: (_, record) => (
+        <>
+          <Button
+            shape="circle"
+            icon={<MoreOutlined />}
+            onClick={() => handleOpenPermissions(record)}
+          />
+        </>
       ),
     },
   ];
 
-  useEffect(() => {
-    const loadData = async () => {
-      setUserData(
-        await UserService.getUsersData({ sortOrder: sortOrder, sortBy: sortBy })
-      );
-    };
-    loadData();
-  }, [sortOrder, sortBy]);
-
-  const data: User[] =
-    userData?.data.map((user) => ({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      date: user.date,
-      isBlocked: user.isBlocked,
-      roles: user.roles,
-      phoneNumber: user.phoneNumber,
-    })) ?? [];
-
   return (
     <>
-      <Input.Search placeholder="Filled" />
-      <Button style={{ width: "5%", marginTop: "0.5rem" }}>Filter</Button>
       <Table<User>
         tableLayout="fixed"
         columns={columns}
         dataSource={data}
-        pagination={{ pageSize: 20 }}
+        rowKey="id"
+        onChange={handleTableChange}
+        pagination={{
+          current: filters.page || 1,
+          pageSize: filters.limit || 20,
+          total: usersData?.meta.totalAmount,
+          align: "start",
+          showSizeChanger: false,
+        }}
+      />
+      <PermissionsModal
+        onCancel={handleCloseModal}
+        open={isModalOpen}
+        user={selectedUser}
+        onRefresh={onRefresh}
       />
     </>
   );

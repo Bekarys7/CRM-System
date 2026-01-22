@@ -6,7 +6,8 @@ import TodoPage from "../pages/todo/TodoPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
-import UsersPage from "../pages/users/Users";
+import UsersPage from "../pages/users/UsersPage";
+import UserPage from "../pages/users/UserPage";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,15 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+
+  {
+    path: "users/:id",
+    element: (
+      <ProtectedRoute>
+        <UserPage />
+      </ProtectedRoute>
+    ),
   },
 ]);
 

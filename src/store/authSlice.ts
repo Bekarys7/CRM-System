@@ -8,7 +8,7 @@ interface userState {
 
 const initialState: userState = {
   isAuth: false,
-  status: "unauthenticated",
+  status: "pending",
 };
 
 export const authSlice = createSlice({
@@ -43,6 +43,10 @@ export const authSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(logout.fulfilled, (state) => {
+      state.isAuth = false;
+      state.status = "unauthenticated";
+    });
+    builder.addCase(logout.rejected, (state) => {
       state.isAuth = false;
       state.status = "unauthenticated";
     });

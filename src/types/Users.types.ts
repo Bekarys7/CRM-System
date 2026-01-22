@@ -15,7 +15,7 @@ export interface User {
   email: string;
   date: string; // ISO date string
   isBlocked: boolean;
-  roles: Roles[];
+  roles: Role[];
   phoneNumber: string;
 }
 // Интерфейс метаинформации
@@ -28,9 +28,10 @@ export interface MetaResponse<T> {
     sortOrder: "asc" | "desc";
   };
 }
+
 // Интерфейс для обновления прав пользователя
 export interface UserRolesRequest {
-  roles: Roles[]; // при вызове этой апи роли будут обновлены к тому массиву который будет передан
+  roles: Role[]; // при вызове этой апи роли будут обновлены к тому массиву который будет передан
   // например если у вас была roles: ['ADMIN'] а вы хотите добавить ['MODERATOR'] то нужно передавать
   // старые + новые - roles: ['ADMIN', 'MODERATOR']
 }
@@ -42,4 +43,10 @@ export interface UserRequest {
   phoneNumber?: string;
 }
 
-export type Roles = "ADMIN" | "MODERATOR" | "USER";
+export const Roles = {
+  ADMIN: "ADMIN",
+  MODERATOR: "MODERATOR",
+  USER: "USER",
+} as const;
+
+export type Role = (typeof Roles)[keyof typeof Roles];
