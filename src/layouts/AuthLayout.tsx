@@ -1,9 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { Card, Col, Row } from "antd";
 import styles from "../pages/auth/AuthPage.module.scss";
 import authBackground from "../assets/authBackground.svg";
+import { useAppSelector } from "../store/hooks/hooks";
 
 const AuthLayout: React.FC = () => {
+  const isAuth = useAppSelector((state) => state.auth.isAuth);
+  if (isAuth) {
+    return <Navigate to="/tasks" replace />;
+  }
   return (
     <div className={styles.authWrapper}>
       <Card

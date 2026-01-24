@@ -23,32 +23,24 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <AppLayout />,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
     children: [
       { index: true, element: <Navigate to="tasks" replace /> },
       {
         path: "tasks",
-        element: (
-          <ProtectedRoute>
-            <TodoPage />
-          </ProtectedRoute>
-        ),
+        element: <TodoPage />,
       },
       {
         path: "profile",
-        element: (
-          <ProtectedRoute>
-            <ProfilePage />
-          </ProtectedRoute>
-        ),
+        element: <ProfilePage />,
       },
       {
         path: "users",
-        element: (
-          <ProtectedRoute>
-            <UsersPage />
-          </ProtectedRoute>
-        ),
+        element: <UsersPage />,
       },
     ],
   },
