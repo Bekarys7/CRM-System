@@ -16,8 +16,6 @@ const AuthPage: React.FC = () => {
     return <Navigate to="/tasks" replace />;
   }
 
-  <>
-    <LoginForm />;
-  </>;
+  return <LoginForm />;
 };
 export default AuthPage;
