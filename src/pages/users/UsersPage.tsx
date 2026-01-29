@@ -26,7 +26,7 @@ const UsersPage: React.FC = () => {
           sortBy: filters.sortBy,
           isBlocked: filters.isBlocked,
           search: filters.search,
-
+          page: filters.page,
           limit: filters.limit,
         });
         setUsersData({

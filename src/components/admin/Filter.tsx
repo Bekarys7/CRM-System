@@ -12,6 +12,7 @@ const Filter: React.FC<FilterProps> = ({ setFilters }) => {
   const onSearch = (value: string) => {
     setFilters((prev) => ({
       ...prev,
+      page: 0,
       search: value,
     }));
   };
