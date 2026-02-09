@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import UsersTable from "../../components/admin/Table";
 import { Flex, Typography } from "antd";
-import type { MetaResponse, User, UserFilters } from "../../types/Users.types";
+import type {
+  MetaResponse,
+  User,
+  UserFilters as IUserFilters,
+} from "../../types/Users.types";
 import UserService from "../../services/user.service";
-import Filter from "../../components/admin/Filter";
+import UserFilters from "../../components/admin/UserFilters";
 
 const UsersPage: React.FC = () => {
   const { Title } = Typography;
@@ -11,8 +15,8 @@ const UsersPage: React.FC = () => {
     data: [],
     meta: { totalAmount: 0, sortBy: "", sortOrder: "asc" },
   });
-  const [filters, setFilters] = useState<UserFilters>({});
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [filters, setFilters] = useState<IUserFilters>({});
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
   const onRefresh = () => {
     setRefreshTrigger((prev) => prev + 1);
@@ -38,7 +42,7 @@ const UsersPage: React.FC = () => {
           },
         });
       } catch (error) {
-        alert(error);
+        // Error handling can be implemented here, e.g., show a notification
       }
     };
 
@@ -49,7 +53,7 @@ const UsersPage: React.FC = () => {
     <>
       <Flex vertical gap="small">
         <Title>Users</Title>
-        <Filter setFilters={setFilters} />
+        <UserFilters setFilters={setFilters} />
         <Flex vertical>
           <UsersTable
             usersData={usersData}

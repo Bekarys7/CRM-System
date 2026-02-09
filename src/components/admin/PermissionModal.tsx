@@ -32,18 +32,19 @@ export const PermissionsModal: React.FC<PermissionsModalProps> = ({
     checkedValues,
   ) => {
     setCheckedList(checkedValues as Role[]);
-
-    console.log("checked = ", checkedValues);
   };
 
   const handleSave = async (id: number) => {
     const payload: UserRolesRequest = {
       roles: checkedList,
     };
-    await UserService.updateUsersRights(id, payload);
-    console.log(checkedList);
-    onRefresh();
-    onCancel();
+    try {
+      await UserService.updateUsersRights(id, payload);
+      onRefresh();
+      onCancel();
+    } catch {
+      //error handling can be added here, e.g. show notification
+    }
   };
 
   return (

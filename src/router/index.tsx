@@ -42,10 +42,6 @@ const router = createBrowserRouter([
         path: "users",
         element: <UsersPage />,
       },
-      {
-        path: "users",
-        element: <ProtectedRoute>{/* <UsersPage /> */}</ProtectedRoute>,
-      },
     ],
   },
 

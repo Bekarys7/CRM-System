@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Button, Input, Modal, Radio, type RadioChangeEvent } from "antd";
-import type { UserFilters } from "../../types/Users.types";
+import type { UserFilters as IUserFilters } from "../../types/Users.types";
 type FilterProps = {
-  setFilters: React.Dispatch<React.SetStateAction<UserFilters>>;
+  setFilters: React.Dispatch<React.SetStateAction<IUserFilters>>;
 };
+type FilterType = "all" | "blocked" | "notBlocked";
 
-const Filter: React.FC<FilterProps> = ({ setFilters }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [value, setValue] = useState(1);
+const UserFilters: React.FC<FilterProps> = ({ setFilters }) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [value, setValue] = useState<FilterType>("all");
 
   const onSearch = (value: string) => {
     setFilters((prev) => ({
@@ -25,11 +26,12 @@ const Filter: React.FC<FilterProps> = ({ setFilters }) => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
+  const handleApplyStatusFilter = () => {
     setIsModalOpen(false);
     setFilters((prev) => ({
       ...prev,
-      isBlocked: value === 2 ? true : value === 3 ? false : undefined,
+      isBlocked:
+        value === "blocked" ? true : value === "notBlocked" ? false : undefined,
     }));
   };
 
@@ -51,16 +53,16 @@ const Filter: React.FC<FilterProps> = ({ setFilters }) => {
         title="Filter users by block status"
         closable={{ "aria-label": "Custom Close Button" }}
         open={isModalOpen}
-        onOk={handleOk}
+        onOk={handleApplyStatusFilter}
         onCancel={handleCancel}
       >
         <Radio.Group
           onChange={handleStatusChange}
           value={value}
           options={[
-            { value: 1, label: "All users" },
-            { value: 2, label: "Blocked" },
-            { value: 3, label: "Not blocked" },
+            { value: "all", label: "All users" },
+            { value: "blocked", label: "Blocked" },
+            { value: "notBlocked", label: "Not blocked" },
           ]}
         />
       </Modal>
@@ -68,4 +70,4 @@ const Filter: React.FC<FilterProps> = ({ setFilters }) => {
   );
 };
 
-export default Filter;
+export default UserFilters;

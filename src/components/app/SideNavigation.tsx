@@ -16,7 +16,7 @@ type MenuItem = Required<MenuProps>["items"][number];
 const SideNavigation: React.FC = () => {
   const [userData, setUserData] = useState<Profile>();
   const location = useLocation();
-  const isAdmin =
+  const hasAdminOrModeratorRole =
     userData?.roles?.some((role) => ["ADMIN", "MODERATOR"].includes(role)) ??
     false;
 
@@ -43,7 +43,7 @@ const SideNavigation: React.FC = () => {
           icon: <UserOutlined />,
           label: <Link to="/profile">Profile</Link>,
         },
-        ...(isAdmin
+        ...(hasAdminOrModeratorRole
           ? [
               {
                 key: "/users",
