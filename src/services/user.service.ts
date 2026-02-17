@@ -48,7 +48,7 @@ export default class UserService {
     roles: UserRolesRequest,
   ): Promise<User> {
     const { data } = await api.post<User>(
-      `/admin/users/${userId}/rights`,
+      `/admin/users/${userId}/right`,
       roles,
     );
     return data;

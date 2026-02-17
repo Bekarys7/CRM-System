@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Checkbox } from "antd";
+import { Modal, Checkbox, notification } from "antd";
 import type { Role, User, UserRolesRequest } from "../../types/Users.types";
 import type { GetProp } from "antd";
 import UserService from "../../services/user.service";
+import { AxiosError } from "axios";
 
 interface PermissionsModalProps {
   open: boolean;
@@ -26,7 +27,7 @@ export const PermissionsModal: React.FC<PermissionsModalProps> = ({
     } else {
       setCheckedList([]);
     }
-  }, [user?.roles]);
+  }, [user]);
 
   const handleRolesChange: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues,
@@ -42,8 +43,14 @@ export const PermissionsModal: React.FC<PermissionsModalProps> = ({
       await UserService.updateUsersRights(id, payload);
       onRefresh();
       onCancel();
-    } catch {
-      //error handling can be added here, e.g. show notification
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error);
+        notification.error({
+          message: `${error?.message || "Failed to update permissions"}`,
+          description: `${error?.response?.data || "An error occurred while updating permissions."}`,
+        });
+      }
     }
   };
 
@@ -64,9 +71,7 @@ export const PermissionsModal: React.FC<PermissionsModalProps> = ({
             options={roleOptions}
             value={checkedList}
             onChange={handleRolesChange}
-          >
-            ADMIN
-          </Checkbox.Group>
+          />
         </div>
       )}
     </Modal>

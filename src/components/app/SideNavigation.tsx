@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
-import styles from "./SideNavigation.module.scss";
 import {
   TeamOutlined,
   UnorderedListOutlined,
@@ -62,7 +61,6 @@ const SideNavigation: React.FC = () => {
       style={{ backgroundColor: "#F5F5F5", border: "none" }}
       mode="inline"
       items={items}
-      className={styles.menu}
     />
   );
 };

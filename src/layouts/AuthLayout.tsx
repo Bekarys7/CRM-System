@@ -19,7 +19,7 @@ const AuthLayout: React.FC = () => {
         }}
       >
         <Row align="middle" style={{ cursor: "default" }}>
-          <Col xs={24} md={15}>
+          <Col xs={24} md={16}>
             <img
               draggable={false}
               alt="auth-background"

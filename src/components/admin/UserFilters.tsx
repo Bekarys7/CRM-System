@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Input, Modal, Radio, type RadioChangeEvent } from "antd";
+import { Input, Radio, type RadioChangeEvent } from "antd";
 import type { UserFilters as IUserFilters } from "../../types/Users.types";
 type FilterProps = {
   setFilters: React.Dispatch<React.SetStateAction<IUserFilters>>;
@@ -7,7 +7,6 @@ type FilterProps = {
 type FilterType = "all" | "blocked" | "notBlocked";
 
 const UserFilters: React.FC<FilterProps> = ({ setFilters }) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [value, setValue] = useState<FilterType>("all");
 
   const onSearch = (value: string) => {
@@ -18,16 +17,9 @@ const UserFilters: React.FC<FilterProps> = ({ setFilters }) => {
     }));
   };
 
-  const handleStatusChange = (e: RadioChangeEvent) => {
+  const handleApplyStatusFilter = (e: RadioChangeEvent) => {
+    const value = e.target.value;
     setValue(e.target.value);
-  };
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleApplyStatusFilter = () => {
-    setIsModalOpen(false);
     setFilters((prev) => ({
       ...prev,
       isBlocked:
@@ -35,37 +27,18 @@ const UserFilters: React.FC<FilterProps> = ({ setFilters }) => {
     }));
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   return (
     <>
       <Input.Search placeholder="Search by name or email" onSearch={onSearch} />
-      <Button
-        type="primary"
-        onClick={handleOpenModal}
-        style={{ width: "5%", marginTop: "0.5rem" }}
-      >
-        Filter
-      </Button>
-      <Modal
-        title="Filter users by block status"
-        closable={{ "aria-label": "Custom Close Button" }}
-        open={isModalOpen}
-        onOk={handleApplyStatusFilter}
-        onCancel={handleCancel}
-      >
-        <Radio.Group
-          onChange={handleStatusChange}
-          value={value}
-          options={[
-            { value: "all", label: "All users" },
-            { value: "blocked", label: "Blocked" },
-            { value: "notBlocked", label: "Not blocked" },
-          ]}
-        />
-      </Modal>
+      <Radio.Group
+        onChange={handleApplyStatusFilter}
+        value={value}
+        options={[
+          { value: "all", label: "All users" },
+          { value: "blocked", label: "Blocked" },
+          { value: "notBlocked", label: "Not blocked" },
+        ]}
+      />
     </>
   );
 };

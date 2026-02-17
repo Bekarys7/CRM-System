@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import UsersTable from "../../components/admin/Table";
-import { Flex, Typography } from "antd";
+import { Flex, notification, Typography } from "antd";
 import type {
   MetaResponse,
   User,
@@ -8,6 +8,7 @@ import type {
 } from "../../types/Users.types";
 import UserService from "../../services/user.service";
 import UserFilters from "../../components/admin/UserFilters";
+import { AxiosError } from "axios";
 
 const UsersPage: React.FC = () => {
   const { Title } = Typography;
@@ -42,7 +43,13 @@ const UsersPage: React.FC = () => {
           },
         });
       } catch (error) {
-        // Error handling can be implemented here, e.g., show a notification
+        if (error instanceof AxiosError) {
+          console.log(error);
+          notification.error({
+            message: `${error?.message || "An error occurred while fetching users."}`,
+            description: `${error?.response?.data || ""}`,
+          });
+        }
       }
     };
 

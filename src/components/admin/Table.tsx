@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Button, Flex, Space, Table, Tag } from "antd";
-import type { TableProps } from "antd";
+import React, { useMemo, useState } from "react";
+import { Button, Flex, Popconfirm, Space, Table, Tag, message } from "antd";
+import type { TableProps, PopconfirmProps } from "antd";
 import { PermissionsModal } from "./PermissionModal";
 import type { MetaResponse, User, UserFilters } from "../../types/Users.types";
 
@@ -29,6 +29,7 @@ const UsersTable: React.FC<UsersTable> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
+  const [popConfirmMessage, holder] = message.useMessage();
 
   const handleOpenPermissions = (user: User) => {
     setSelectedUser(user);
@@ -40,16 +41,24 @@ const UsersTable: React.FC<UsersTable> = ({
     setSelectedUser(undefined);
   };
 
-  const data: User[] =
-    usersData?.data.map((user) => ({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      date: user.date,
-      isBlocked: user.isBlocked,
-      roles: user.roles,
-      phoneNumber: user.phoneNumber,
-    })) ?? [];
+  const data: User[] = useMemo(() => {
+    return (
+      usersData?.data.map((user) => ({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        date: user.date,
+        isBlocked: user.isBlocked,
+        roles: user.roles,
+        phoneNumber: user.phoneNumber,
+      })) ?? []
+    );
+  }, [usersData]);
+
+  const cancelDelete: PopconfirmProps["onCancel"] = (e) => {
+    console.log(e);
+    popConfirmMessage.error("Click on No");
+  };
 
   const handleSortOrder = () => {
     const newOrder = filters.sortOrder === "asc" ? "desc" : "asc";
@@ -96,7 +105,7 @@ const UsersTable: React.FC<UsersTable> = ({
             shape="circle"
             size="small"
             onClick={handleSortOrder}
-            style={{ border: "none", backgroundColor: "#FAFAFA" }}
+            style={{ backgroundColor: "#FAFAFA" }}
           >
             {filters.sortOrder === "asc" ? (
               <SortAscendingOutlined style={{ cursor: "pointer" }} />
@@ -172,7 +181,7 @@ const UsersTable: React.FC<UsersTable> = ({
       key: "edit",
       render: (_, record) => (
         <>
-          <Link to={`/users/:${record.id}`}>View profile</Link>
+          <Link to={`/users/${record.id}`}>View profile</Link>
         </>
       ),
     },
@@ -201,13 +210,21 @@ const UsersTable: React.FC<UsersTable> = ({
       title: " Delete",
       key: "delete",
       render: (_, record) => (
-        <Button
-          type="primary"
-          danger
-          onClick={() => handleDeleteUser(record.id)}
-        >
-          Delete
-        </Button>
+        <>
+          {holder}
+          <Popconfirm
+            title="Delete the task"
+            description="Are you sure to delete this task?"
+            onConfirm={() => handleDeleteUser(record.id)}
+            onCancel={cancelDelete}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger>
+              Delete
+            </Button>
+          </Popconfirm>
+        </>
       ),
     },
     {
