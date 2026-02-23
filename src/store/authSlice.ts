@@ -14,7 +14,12 @@ const initialState: userState = {
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    syncLogout: (state) => {
+      state.isAuth = false;
+      state.status = "unauthenticated";
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
       state.status = "pending";
@@ -30,6 +35,7 @@ export const authSlice = createSlice({
     });
     builder.addCase(checkAuth.pending, (state) => {
       state.status = "pending";
+      state.isAuth = false;
     });
     builder.addCase(checkAuth.fulfilled, (state) => {
       state.status = "authenticated";
@@ -53,4 +59,5 @@ export const authSlice = createSlice({
   },
 });
 
+export const { syncLogout } = authSlice.actions;
 export default authSlice.reducer;

@@ -19,6 +19,7 @@ const UsersPage: React.FC = () => {
   const [filters, setFilters] = useState<IUserFilters>({});
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
+  console.log(usersData);
   const onRefresh = () => {
     setRefreshTrigger((prev) => prev + 1);
   };

@@ -13,6 +13,21 @@ const UserPage: React.FC = () => {
   const { id } = useParams();
   const userId = Number(id);
 
+  const getChangedFields = <T extends Record<string, any>>(
+    original: T,
+    values: Record<string, any>,
+  ): Partial<T> => {
+    const dirtyFields: Partial<T> = {};
+
+    Object.keys(values).forEach((key) => {
+      if (values[key] !== original[key as keyof T]) {
+        dirtyFields[key as keyof T] = values[key];
+      }
+    });
+
+    return dirtyFields;
+  };
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -37,24 +52,22 @@ const UserPage: React.FC = () => {
   const handleSaveProfile = async (values: UserRequest) => {
     try {
       if (userInfo) {
-        const dataToSend = {
-          ...values,
-          login:
-            values.username === userInfo.username ? undefined : values.username,
-          email: values.email === userInfo.email ? undefined : values.email,
-          username:
-            values.username === userInfo.username ? undefined : values.username,
-        };
+        const dataToSend = getChangedFields(userInfo, values);
+        if (Object.keys(dataToSend).length === 0) {
+          setToggleEdit(false);
+          return;
+        }
+
         await UserService.editUser(userInfo.id, dataToSend);
         notification.success({ message: "Changes saved" });
+        setUserInfo({ ...userInfo, ...dataToSend });
         setToggleEdit(false);
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.log(error);
         notification.error({
-          message: `${error?.message || "Failed to edit user "}`,
-          description: `${error?.response?.data || "An error occurred while editing user."}`,
+          message: error?.message || "Failed to edit user",
+          description: error?.response?.data || "An error occurred",
         });
       }
     }

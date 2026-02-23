@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../store/hooks/hooks";
-import { checkAuth } from "../store/authActions";
+import { useAppDispatch } from "../store/hooks/hooks";
+import { checkAuth, logout } from "../store/authActions";
 import { notification } from "antd";
 import LoadingSpinner from "../components/app/LoadingSpinner";
 import { Outlet } from "react-router-dom";
+import { syncLogout } from "../store/authSlice";
 
 const RootLayout = () => {
   const dispatch = useAppDispatch();
@@ -24,8 +25,12 @@ const RootLayout = () => {
               description: ` ${error || "An error occurred during authentication initialization."}`,
             });
           }
+          await dispatch(logout());
         }
+      } else {
+        dispatch(syncLogout());
       }
+
       setIsInitialized(true);
     };
 

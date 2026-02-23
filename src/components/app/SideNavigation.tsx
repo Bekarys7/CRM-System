@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
@@ -7,25 +7,29 @@ import {
   UnorderedListOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import UserService from "../../services/user.service";
-import type { Profile } from "../../types/Auth.types";
+
+import { useAppSelector } from "../../store/hooks/hooks";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const SideNavigation: React.FC = () => {
-  const [userData, setUserData] = useState<Profile>();
+  const userData = useAppSelector((state) => state.user.data);
   const location = useLocation();
   const hasAdminOrModeratorRole =
     userData?.roles?.some((role) => ["ADMIN", "MODERATOR"].includes(role)) ??
     false;
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const data = await UserService.getUserData();
-      setUserData(data);
-    };
-    fetchUserData();
-  }, []);
+    console.log("User data updated:", userData);
+  }, [userData]);
+
+  console.log("SideNavigation Render:", {
+    userData,
+    roles: userData?.roles,
+    isAdmin: userData?.roles?.some((role) =>
+      ["ADMIN", "MODERATOR"].includes(role),
+    ),
+  });
 
   const items: MenuItem[] = [
     {

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import type { AuthData } from "../../types/Auth.types";
 import { useAppDispatch } from "../../store/hooks/hooks";
 import { login } from "../../store/authActions";
+import { getUserData } from "../../store/userActions";
 
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -14,6 +15,7 @@ const LoginForm: React.FC = () => {
   const handleLogin = async (values: AuthData) => {
     try {
       await dispatch(login(values)).unwrap();
+      await dispatch(getUserData()).unwrap();
       navigate("/tasks");
     } catch (error) {
       notification.error({ message: ` ${error}` });
