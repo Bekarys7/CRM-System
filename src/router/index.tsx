@@ -6,44 +6,55 @@ import TodoPage from "../pages/todo/TodoPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout";
-// import UsersPage from "../pages/users/Users";
+import UsersPage from "../pages/users/UsersPage";
+import UserPage from "../pages/users/UserPage";
+import RootLayout from "../layouts/RootLayout";
 
 const router = createBrowserRouter([
   {
-    path: "/auth",
-    element: <AuthLayout />,
+    element: <RootLayout />,
     children: [
-      { index: true, element: <AuthPage /> },
       {
-        path: "signUp",
-        element: <RegistrationPage />,
+        path: "/auth",
+        element: <AuthLayout />,
+        children: [
+          { index: true, element: <AuthPage /> },
+          {
+            path: "signUp",
+            element: <RegistrationPage />,
+          },
+        ],
       },
-    ],
-  },
-  {
-    path: "/",
-    element: <AppLayout />,
-    children: [
-      { index: true, element: <Navigate to="tasks" replace /> },
       {
-        path: "tasks",
+        path: "/",
         element: (
           <ProtectedRoute>
-            <TodoPage />
+            <AppLayout />
           </ProtectedRoute>
         ),
-      },
-      {
-        path: "profile",
-        element: (
-          <ProtectedRoute>
-            <ProfilePage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "users",
-        element: <ProtectedRoute>{/* <UsersPage /> */}</ProtectedRoute>,
+        children: [
+          { index: true, element: <Navigate to="tasks" replace /> },
+          {
+            path: "tasks",
+            element: <TodoPage />,
+          },
+          {
+            path: "profile",
+            element: <ProfilePage />,
+          },
+          {
+            path: "users",
+            element: <UsersPage />,
+          },
+          {
+            path: "users/:id",
+            element: (
+              <ProtectedRoute>
+                <UserPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
       },
     ],
   },
