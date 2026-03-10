@@ -1,0 +1,78 @@
+import React, { useEffect, useState } from "react";
+import UsersTable from "../../components/admin/Table";
+import { Flex, notification, Typography } from "antd";
+import type {
+  MetaResponse,
+  User,
+  UserFilters as IUserFilters,
+} from "../../types/Users.types";
+import UserService from "../../services/user.service";
+import UserFilters from "../../components/admin/UserFilters";
+import { AxiosError } from "axios";
+
+const UsersPage: React.FC = () => {
+  const { Title } = Typography;
+  const [usersData, setUsersData] = useState<MetaResponse<User>>({
+    data: [],
+    meta: { totalAmount: 0, sortBy: "", sortOrder: "asc" },
+  });
+  const [filters, setFilters] = useState<IUserFilters>({});
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+
+  console.log(usersData);
+  const onRefresh = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
+  useEffect(() => {
+    const fetchAndSetUsers = async (): Promise<void> => {
+      try {
+        const response = await UserService.getUsersData({
+          sortOrder: filters.sortOrder,
+          sortBy: filters.sortBy,
+          isBlocked: filters.isBlocked,
+          search: filters.search,
+          page: filters.page,
+          limit: filters.limit,
+        });
+        setUsersData({
+          data: response?.data ?? [],
+          meta: response?.meta ?? {
+            totalAmount: 0,
+            sortBy: "",
+            sortOrder: "asc",
+          },
+        });
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          console.log(error);
+          notification.error({
+            message: `${error?.message || "An error occurred while fetching users."}`,
+            description: `${error?.response?.data || ""}`,
+          });
+        }
+      }
+    };
+
+    fetchAndSetUsers();
+  }, [filters, refreshTrigger]);
+
+  return (
+    <>
+      <Flex vertical gap="small">
+        <Title>Users</Title>
+        <UserFilters setFilters={setFilters} />
+        <Flex vertical>
+          <UsersTable
+            usersData={usersData}
+            setFilters={setFilters}
+            filters={filters}
+            onRefresh={onRefresh}
+          />
+        </Flex>
+      </Flex>
+    </>
+  );
+};
+
+export default UsersPage;

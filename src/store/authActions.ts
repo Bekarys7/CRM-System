@@ -14,7 +14,7 @@ export const register = createAsyncThunk(
       }
       return rejectWithValue("Unknown error occurred");
     }
-  }
+  },
 );
 
 export const login = createAsyncThunk(
@@ -28,7 +28,7 @@ export const login = createAsyncThunk(
       }
       return rejectWithValue("Unknown error occurred");
     }
-  }
+  },
 );
 
 export const logout = createAsyncThunk(
@@ -42,7 +42,7 @@ export const logout = createAsyncThunk(
       }
       return rejectWithValue("Unknown error occurred");
     }
-  }
+  },
 );
 
 export const checkAuth = createAsyncThunk(
@@ -52,9 +52,10 @@ export const checkAuth = createAsyncThunk(
       await authService.checkAuth();
     } catch (error) {
       if (error instanceof AxiosError) {
-        return rejectWithValue(error?.response?.data);
+        const message = error.response?.data || "Auth failed";
+        return rejectWithValue(message);
       }
       return rejectWithValue("Unknown error occurred");
     }
-  }
+  },
 );

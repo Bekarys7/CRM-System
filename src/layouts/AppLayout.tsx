@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
-import SideMenu from "../components/app/SideNavigation";
+import SideNavigation from "../components/app/SideNavigation";
 import { Layout } from "antd";
 
 const { Sider, Content } = Layout;
 
-function RootLayout() {
+function AppLayout() {
   return (
     <>
       <Layout
@@ -14,7 +14,7 @@ function RootLayout() {
         }}
       >
         <Sider style={{ backgroundColor: "#F5F5F5" }}>
-          <SideMenu />
+          <SideNavigation />
         </Sider>
 
         <Layout>
@@ -26,4 +26,4 @@ function RootLayout() {
     </>
   );
 }
-export default RootLayout;
+export default AppLayout;
