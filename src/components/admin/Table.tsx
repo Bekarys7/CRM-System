@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Button, Flex, Popconfirm, Space, Table, Tag, message } from "antd";
 import type { TableProps, PopconfirmProps } from "antd";
 import { PermissionsModal } from "./PermissionModal";
@@ -52,7 +52,7 @@ const UsersTable: React.FC<UsersTable> = ({
       phoneNumber: user.phoneNumber,
     })) ?? [];
 
-  const cancelDelete: PopconfirmProps["onCancel"] = (e) => {
+  const cancelDelete: PopconfirmProps["onCancel"] = () => {
     popConfirmMessage.error("Click on No");
   };
 
