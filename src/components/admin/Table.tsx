@@ -41,22 +41,18 @@ const UsersTable: React.FC<UsersTable> = ({
     setSelectedUser(undefined);
   };
 
-  const data: User[] = useMemo(() => {
-    return (
-      usersData?.data.map((user) => ({
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        date: user.date,
-        isBlocked: user.isBlocked,
-        roles: user.roles,
-        phoneNumber: user.phoneNumber,
-      })) ?? []
-    );
-  }, [usersData]);
+  const data: User[] =
+    usersData?.data.map((user) => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      date: user.date,
+      isBlocked: user.isBlocked,
+      roles: user.roles,
+      phoneNumber: user.phoneNumber,
+    })) ?? [];
 
   const cancelDelete: PopconfirmProps["onCancel"] = (e) => {
-    console.log(e);
     popConfirmMessage.error("Click on No");
   };
 
